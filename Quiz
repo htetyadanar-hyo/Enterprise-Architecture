@@ -1,0 +1,80 @@
+Quiz
+1. Explain Dependency Injection.
+    Spring instantiates objects and wires them together by injecting dependencies from the outside.
+2. Explain Inversion of Control.
+    Transferring the control of object creation and management from the main program to a framework, promoting loose coupling and enhancing modularity.
+3. How many types of Dependency Injection.
+4. Prototype is lazily by default. (True)
+5. Domain classes are not controlled by beans. (True)
+6.  What is difference by using constructor DI and property DI. Please write shortly
+    Constructor DI: Dependencies are provided to a class through its constructor parameters.
+    This ensures that all required dependencies are available when the object is instantiated.
+    Property DI: Dependencies are provided to a class through setter methods or directly setting properties.
+    This allows for more flexibility as dependencies can be changed after object creation, but it might result in objects being in an inconsistent state until all dependencies are set.
+7. Order of Execution
+   1) Instantiate an instance of ApplicationContext
+   2) Start reading and processing config (XML, @, Java, Hybrid)
+   3) Detect beans and start instantiating "eager" beans
+       3a) If DI is constructor, do DI
+   4) Property/Field Injection
+   5) Call the init method if exists
+   6) Call run()
+   7) App runs
+   8) App shutdown => context close
+   9) Call destroy methods (@PreDestroy)
+
+
+1. What is JoinPoint?
+     A specific point in the execution of a program, such as method or code, where an aspect can be applied
+2. What is PointCut?
+    Collection of one or join points
+3. What is Aspect?
+    A component in AOP that contains code for cross-cutting concerns like logging or transaction management at which pointcut.
+4. What is Advice?
+    Advice is the code that implements the logic for the cross-cutting concern. It's a method defined within the aspect class.
+5. What is weaving?
+    Weaving is the process of combining aspects with the main program code.
+        ~ Proxy-based weaving (At run time)
+        ~ Load time weaving
+6. What is the main issue of Proxy?
+    If a business method calls another business method of the same object,
+    then this call is not going via the proxy, so AOP advices are not called.
+7. Cross-cutting concern
+ This is the functionality that affects multiple parts of your codebase in a scattered way.
+
+
+1. JPA has 4 States of LifeCycle
+2. @Transient marks @Transient state from above. (False)
+3. JPA acts like a cache between database and persistence context.
+
+Problems with relation databases
+▪ Scaling writes is very difficult and limited
+    ▪ Vertical scaling is limited and is expensive
+    ▪ Horizontal scaling is limited and is complex
+▪ The schema in a database is fixed
+▪ Schema evolution
+▪ Relational schema doesn‘t easily handle unstructured and semi-structured data
+
+NoSQL characteristics
+▪ Key-value store
+▪ No fixed schema (Schema free)
+▪ Can scale (almost) unlimited ▪ Eventual consistency
+
+RDBMS vs MongoDB
+Database➜Database
+Table➜Collection
+Row➜Document
+Index➜Index
+Join➜Embedded Document
+Foreign Key➜Reference
+
+Remember it is stored in binary formats (BSON)
+
+logging:
+  level:
+    root: ERROR
+    org:
+      springframework: ERROR
+
+server:
+  port: 8081

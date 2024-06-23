@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="accountService" class="DI.Constructor.AccountServiceImpl">
+        <constructor-arg ref="paymentService"/>
+        <constructor-arg ref="accountRepository"/>
+     </bean>
+    <bean id="accountRepository" class="DI.Constructor.AccountRepositoryImpl"/>
+    <bean id="paymentService" class="DI.Constructor.PaymentServiceImpl"/>
+
+</beans>

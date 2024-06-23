@@ -1,0 +1,997 @@
+Object vs Relational Mismatch
+1. Objects have identity(object1 == object2)
+    In relational model, the table name and primary key are used to identity a row in a table.
+2. Object has associations (one-to-one,...)
+    Relational model has foreign key to map.
+3. Object has inheritance.
+    Relational model has no inheritance
+4. Data can be accessed by association.
+    Data can be accessed by using queries and join
+
+What is JDBC?
+JDBC stands for Java Database Connectivity. It's like a translator between Java applications and databases.
+Here's the gist:
+Java programs can't directly access databases.
+JDBC acts as a middle layer. It provides a set of tools (called an API) for Java programs to connect to databases, send queries, and retrieve or update data.
+JDBC works with various databases. It doesn't matter if you're using MySQL, Oracle, or something else, JDBC can handle the communication as long as the database has a compatible driver.
+
+Disadvantages of JDBC
+1. Code duplication
+    Open and Closing connection
+    Transaction handling
+    Exception handling
+2. Try-catch-finally-try-catch
+3. Large number of lines of JDBC code
+4. In case of SQL Exception, the database returns a database specific-error code.
+
+Spring JDBC template takes care of
+1. Open and closing JDBC connection
+2. Transaction handling
+3. Exception handling
+    JDBC throws a SQLException (CheckedException must be caught)
+        It is compile time Exception. You can't ignore it during compilation.)
+    JDBC Template throws a DataAccessException (Runtime exception)
+        Unlike SQLException, it's a runtime exception, so your code doesn't have to handle it explicitly during compilation.
+
+DAO (Repository)=> Data Access Object => Spring JDBC code is written here.
+
+What is ORM?
+An Object Relational Mapper (ORM) acts as a bridge between your object-oriented programming world and relational databases.
+
+Two main advantages of ORM databases versus plain databases
+1. Developer Productivity and Ease of Use
+    ~ reducing the need for writing extensive SQL queries
+2. Maintenance is easier
+    ~ Mapping is defined at one place
+3. Performance
+    ~ Caching
+    ~ Allows easy switching between different database systems with minimal code changes.
+
+Persistence code allows your program to:
+Remember information: Even after you close the program and restart it later, the saved data can be retrieved and used again.
+Share data: Persistence allows multiple users or devices to access and modify the same data (e.g., a shared to-do list between family members).
+In essence, persistence code bridges the gap between the program's temporary memory and a more permanent storage location, ensuring your data isn't lost when the program stops running.
+
+Advantages of ORM
+1. Productivity
+    Less Lines of persistence code
+2. Maintenance is easier
+    Mapping is defined at one place
+3. Performance
+    Caching => to get the data easily
+    The ORM developers spend a lot of time in optimizing the ORM tool.
+
+Data Persistence vs Persistence Management
+Data persistence is the capability of storing data beyond program runtime.
+Persistence management is the set of practices used to effectively achieve data persistence in your application.
+
+Relation JPA and Hibernate
+JPA defines the functionalities:
+    It specifies methods for mapping Java classes to database tables, performing CRUD (Create, Read, Update, Delete) operations, and managing relationships between objects.
+Hibernate implements JPA:
+    It provides annotations and classes that you can use in your Java code to achieve these functionalities according to the JPA specification.
+JPA interacts with the provider (Hibernate):
+    When you use JPA annotations in your code, Hibernate translates them into specific database queries for your chosen relational database system.
+
+Package where to find the repositories
+@EnableJpaRepositories("repositories")
+Package where to find the package
+@EntityScan("domain")
+
+Primary key
+1. unique
+2. constant
+3. required
+
+Primary key types:
+1. Natural key => meaning
+2. Surrogate key => no meaning
+
+Annotation
+@Id => Hibernate require the property(attribute) to use as a primary key
+@GeneratedValue =>
+    The system will generate an automated surrogate key for your entity class
+    To generate unique primary keys for your JPA entities
+    Ensure identity immutability => private setId()
+
+Specify Identity Generation
+@GeneratedValue(strategy=GenerationType.AUTO)
+AUTO => select the best strategy for your database
+IDENTITY =>  To generate unique keys. Identity columns are typically auto-incrementing integer values (e.g., MySQL, SQL Server, HSQL)
+SEQUENCE => To generate unique key values. A sequence is a database schema object that generates a series of numbers.(Oracle, PostgresQl,..)
+            ▪ By default Hibernate only uses a single sequence called ‘hibernate-sequence’
+            ▪ You can specify additional custom sequences
+            @Entity
+            ***@SequenceGenerator(name="personSeq", sequenceName="PERSON_SEQUENCE")
+            public class Person_annotated_sequence {
+                @Id
+                @GeneratedValue(generator="personSeq")
+                private long id;
+                ....
+            }
+TABLE => This strategy uses a separate table to store the next available primary key value. This table is typically managed by the JPA provider.
+For MySQL, if you don't use anything with @GeneratedValue, it will choose the IDENTITY strategy by default.
+
+Retrieving vs Fetching
+1. Both fetching and retrieving refer to the process of accessing and obtaining data from a storage location.
+2. This data can be stored in various places like files, databases, or network locations.
+Retrieving: Imagine you have a book on your desk (data readily available in memory). Retrieving it simply involves picking it up and reading it.
+Fetching: Imagine you need a specific book from the library (data not readily available). Fetching involves going to the library (making a request), searching for the book (potentially waiting), and bringing it back to read (receiving the data).
+
+Annotation
+@Column => to specify more details
+@Lob => to indicate Large value
+@Transient => to indicate that a property should not be persisted(saved)
+            @Entity
+            public class Person{
+                @Id
+                @GeneratedValue
+                private long id;
+                @Column(name="Fullname",length=255, nullable=false)
+                private String name;
+                @Column(name="Date")
+                private Date birthday;
+                @Lob
+                private String biography; (Because it will stores as CLOB instead of varchar)
+                @Transient
+                private String temp; (Temp will not be stored in the database)
+                ....
+            }
+
+Property or Field Access
+▪ JPA can access objects in two ways
+Placing @Id on a getter specifies property access
+    ▪ property access gets and sets object values through getter /setter methods
+Placing @Id on a field specifies field access
+    ▪ field access gets and sets object values directly from / to the fields
+
+JPA lifecycle of entity
+Entity Manager:
+The entity manager is a central component in JPA that manages the lifecycle of entities.
+It provides methods for persisting, merging, removing, and finding entities.
+Transient:
+It is related to the entity object in the sense that it's a property of that object. However, it's not mapped to any database column and won't be saved even if the entity is persisted.
+You might have temporary fields in your entity class that you don't need to store in the database. For example, a calculated property based on other entity fields.
+@Transient => JPA does not directly mark the state of an entity. It marks a specific property of an entity class as transient.
+This means the property's value will not be persisted to the database even if the entity itself is saved.
+A transient entity has no database identity
+Managed:
+Once an entity is persisted, it becomes a managed entity. This means JPA tracks any changes made to the entity object in your program.
+Any updates to the entity object will be reflected in the corresponding database record later.
+A managed entity is managed by the persistence context and has a database identity.
+Detached:
+An entity becomes detached if it's removed from the persistence context (managed entities). This can happen when the entity manager is closed or if you explicitly detach it.
+A detached entity is not tracked by JPA anymore, and any changes to it won't be reflected in the database.
+A detached entity has a database identity, but is not managed by the current persistence context
+Removed:
+This state signifies that an entity has been removed from the database. It's no longer managed by JPA.
+
+Entity manager is the main control and persistence context is working under entity manager and just check about its related entities and its changes state.
+Entity Manager: The entity manager is like the head librarian.
+They oversee all library operations (CRUD) and have control over the staff (persistence context).
+Persistence Context: The persistence context is like the librarian's workspace or desk.
+It holds the books (entities) that are currently being checked out (managed) or processed (changes tracked).
+The head librarian (entity manager) uses this workspace to manage the books and interact with the library system (database).
+
+Persistence Context:
+▪ Manages the entities
+▪ Guarantees that managed enities will be saved in the database
+▪ Tracks changes until they are pushed to the database
+▪ Works like a cache
+
+@ManyToOne
+Foreign key is on car. (Car is many)
+default=>JoinColumn
+            @Entity
+            public class Car{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToOne
+                @JoinColumn(name = "car_id")
+                private Customer customer;
+                ....
+            }
+            ****************
+            Here another => car-cust Table will be generated.
+            @Entity
+            public class Car{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToOne
+                @JoinTable(name = "car_cust")
+
+                @JoinTable(name = "car_cust",
+                    joinColumns = { @JoinColumn(name = "car_id") },
+                    joinColumns = { @JoinColumn(name = "cust_id") })
+                private Customer customer;
+                ....
+            }
+
+@OneToMany
+default => JoinTable
+            @Entity
+            public class Customer{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToMany
+                @JoinTable(name = "cust_car")
+
+                @JoinTable(name = "cust_car",
+                joinColumns = { @JoinColumn(name = "cust_id") },
+                joinColumns = { @JoinColumn(name = "car_id") })
+                private List<Car> cars = new ArrayList<>();
+                ....
+            }
+            ********
+            cust_id is on car side. Foreign key is always on many side.
+            @Entity
+            public class Customer{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToMany
+                @JoinColumn(name = "cust_id")
+                private List<Car> cars = new ArrayList<>();
+                ....
+            }
+
+Bi-directional
+Foreign key is on the car. Other way, the table there is no mappedBy.
+***Don't put join Column on mappedBy side.
+            @Entity
+            public class Customer{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToMany(mappedBy="owner")
+                private List<Car> cars = new ArrayList<>();
+                ....
+            }
+            @Entity
+            public class Car{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToOne
+                @JoinColumn(name = "owner_id")
+                private Customer owner;
+                ....
+            }
+
+@OneToOne
+If there is bi-directional, please add mappedBy on the side that you don't want to have foreign key.
+Mapping result is like => @ManyToOne
+So, foreign key is on Customer.
+            @Entity
+            public class Customer{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToOne
+                private Address address;
+                ....
+            }
+            @Entity
+            public class Address{
+                @Id
+                @GeneratedValue
+                private long id;
+                ....
+            }
+            ***Shared Primary Key
+            foreign key column will remove and share primary key together.
+            @OneToOne
+            @PrimaryKeyJoinColumn
+            ****At that time, id has to be set at manually. Primary key value not generated.
+
+@ManyToMany
+***Put mappedBy on the side where there is not jointable
+Default => JoinTable
+            @Entity
+            public class Customer{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToMany
+                @JoinTable (name = "Customer_SalesPerson",
+                    joinColumns = { @JoinColumn(name = "Customer_id") },
+                    inverseJoinColumns = { @JoinColumn(name = "SalesPerson_id") } )
+                private List<SalesPerson> salesperson;
+                ....
+            }
+            @Entity
+            public class Address{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToMany(mappedBy = "salesperson")
+                private List<SalesPerson> salesperson;
+                ....
+            }
+****
+In JPA, the side that does not have the mappedBy attribute is the owner side, while the side with the mappedBy attribute is the inverse side.
+The foreign key is typically placed on the owner side of the relationship
+
+Cascading
+@OneToMany(cascade = CascadeType.PERSIST)
+***By default => No cascading
+ALL > Cascade on all operations
+PERSIST > Cascade on persist operations
+MERGE > Cascade on merge operations
+REMOVE > Cascade on remove operations
+REFRESH > Cascade on refresh operations
+
+JPA Default fetching
+@OneToMany(fetch = FetchType.LAZY)
+@ManyToOne => eager
+@OneToOne => eager
+@ManyToMany => lazy
+@OneToMany => lazy
+
+Collection => NotOrder
+Bag => NotOrder
+Sets => no duplicate keys, Not order
+List => Contain duplicate keys, In programming, List is order, however, in JPA, list is not ordered.
+    Order the list of tools by the attribute 'type'
+            public class Person{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToMany(mappedBy="owner")
+                @OrderBy(clause = "type ASC")
+                private List<Tool> tools = new ArrayList<>();
+                ....
+            }
+
+Map =>
+            public class Person{
+                @Id
+                @GeneratedValue
+                private long id;
+                @OneToMany(mappedBy="owner")
+                @MapKey(name = "id")
+                private Map<Long, Pet> pets = new HashMap<Long, Pet>();
+                ....
+            }
+            public class Pet{
+                @Id
+                @GeneratedValue
+                private long id;
+                @ManyToOne
+                private Person owner;
+                ....
+            }
+
+Inheritance Mapping
+***No id on Child because primary key is only one.
+***Entity on all child
+
+Single Table per Hierarchy
++ Simple, Easy to implement
++ Good Performance on non-polymorphic and polymorphic queries
+- De-normalized schema
+- May have to contains lots of columns
+- A change in any class results in a change of this table
+Parent
+    @Entity
+    @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+    @DiscriminatorColumn(name = "account_type",
+        discriminatorType = DiscriminatorType.STRING)
+Child
+    @Entity
+    @DiscriminatorValue("savings")
+    extends Parent
+
+Joined Table
++ Normalized Schema
++ Database view is similar to Domain view
+– Inserting or updating an entity results in multiple insert or update statements
+– Necessary joins can give bad query performance
+Parent
+    @Entity
+    @Inheritance(strategy = InheritanceType.JOINED)
+Child
+    @Entity
+    extends Parent
+
+Table Per Class
++ Very efficient for non-polymorphic queries
++ No null values
+- Cannot use identity Column ID generation
+- JPA does not require its implementation (optional)
+- Requires a union for polymorphic queries
+Parent
+    @Entity
+    @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+    public class Account {
+        @Id
+        @GeneratedValue(strategy=GenerationType.TABLE)
+        private long number;
+        private double balance;
+    ...
+}
+Child
+***Not Primitive Type
+    @Entity
+    public class Savings extend Account{
+        private Double APY;
+    ...
+}
+
+Complex Mappings
+Secondary Tables => One class to multiple table (shared primary key from class)
+    @Entity
+    @DiscriminatorValue("savings")
+    @SecondaryTable(
+        name="SavingsAccount",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = "number") => number is from parent
+    )
+    public class Savings extends Account{
+        @Column(table = "SavingsAccount")
+        ...
+    }
+
+    @Entity
+    @DiscriminatorValue("warehouse")
+    @SecondaryTables(
+        @SecondaryTable(
+            name="SavingsAccount",
+            ***pkJoinColumns = @PrimaryKeyJoinColumn(name = "product_id",referenceColumnName="number")
+        )
+    )
+    public class Product{
+        @Id
+        @GeneratedValue
+        private int number;
+        ***@Column(table = "warehouse")
+        private boolean available;
+        @Column(table = "warehouse")
+        private double stock;
+        ...
+    }
+
+Embedded Class => Multiple class to one table (Use in OneToOne)
+These classes are considered value classes rather than entity classes
+       @Entity
+       public class Product{
+               @Id
+               @GeneratedValue
+               private int number;
+               private boolean available;
+               @Embedded
+               private ProductDateInfo productDateInfo;
+               ...
+       }
+       ***No id, No entity
+       @Embeddable
+       public class ProductDateInfo{
+            private LocalDate createdDate;
+            private LocalDate shippedDate;
+       }
+
+//Multiple Embedded Addresses
+       @Entity
+       public class Person{
+           @Id
+           @GeneratedValue
+           private int id;
+
+           @Embedded
+           ***@AttributeOverrides({
+               @AttributeOverride(name="street", column=@Column(name="ship_street"),
+               @AttributeOverride(name="city", column=@Column(name="ship_city")
+           })
+           private Address shipping;
+
+           @Embedded
+           @AttributeOverrides({
+                   @AttributeOverride(name="street", column=@Column(name="bill_street"),
+                   @AttributeOverride(name="city", column=@Column(name="bill_city")
+           })
+           private Address billing;
+       }
+
+Composite Keys => Can be used as EmbeddedId
+▪ By definition these are natural keys
+▪ Have to be set by the application (not generated)
+▪ Generally found in legacy systems
+▪ Also create multi-column Foreign Keys
+
+@Embeddable
+public class Name implements Serializable{
+    private String firstname;
+    private String lastname;
+    ....
+    ***public boolean equals(Object obj){
+       ...
+    }
+    ***public int hashCode(){
+        ...
+    }
+}
+@Entity
+public class Employee{
+    ***@EmbeddedId
+    private Name name;
+    private Date startDate;
+    @OneToMany(mappedBy = "owner")
+    private Collection<Project> projects = new ArrayList<Project>();
+}
+@Entity
+public class Project{
+    @Id
+    @GeneratedValue
+    private int id;
+    @ManyToOne
+    ***@JoinColumns({
+        @JoinColumn(name = "Emp_firstname", referencedColumnName="firstname"),
+        @JoinColumn(name = "Emp_lastname", referencedColumnName = "lastname")
+    })
+    private Employee owner;
+}
+
+If you use ManyToOne relationship and one type is not entity
+*** (Enum is not Entity)
+By using @Enumerated(EnumType.String) is used to map Enum
+public enum SalaryRate{
+    JUNIOR,
+    SENIOR
+}
+@Enumerated(EnumType.STRING)
+public SalaryRate getPayScale(){...}
+
+If you use OneToMany relationship and one type is not entity
+*** (String is not Entity)
+@ElementCollection to map String
+private Set<String> nickNames = new HashSet<>();
+
+Data Transfer Objects (DTO)
+A DTO has no business logic and is used to transfer data between objects.
+Using DTO’s gives loose coupling through information hiding.
+
+REST
+-stateless
+stateless means each request from a client to the server is treated as an independent event.
+The server doesn't store any information about the client's previous requests.
+Every request must contain all the information needed to be understood and processed on its own
+-client/server relationship
+-resources => /students/123/registrations (easily understood directory structure URIs)
+-representations => transfer json or xml to represent data objects and attributes.
+put => full update
+patch => partial update
+
+Status code
+1xx => informational
+2xx => success
+3xx => redirection (go to another location)
+4xx => client error
+5xx => server error
+
+Body => xml
+
+POST
+No need to have id when you send the data to server. Server is auto generated.
+
+@RestController
+It is called by sending HTTP REST requests, and that returns HTTP response messages
+@RequestMapping("/greeting") => greeting must be unique
+
+Upper Class => prefix
+Inside Class above method => postfix
+@RequestMapping("/greeting/{name}")
+    greeting(@PathVariable String name)
+Spring Boot has embedded tomcat web container inside it.
+
+Default Rest Controller is json
+
+/hello/greeting?name=Frank
+@RequestParam => Getting the parameter from the url
+
+@RequestBody => requesting the body to post or update
+
+Returning a class => json
+
+If you were to return the object directly without ResponseEntity, you would lose the ability to set the HTTP status code and headers easily, and you would have less control over the response format.
+ResponseEntity is wrapper. To response two types of different classes
+
+If we did not put on id on put, it will update batch.
+
+Servlet Engine (The request processing workflow in spring web mvc)
+1) Type a URL in browser and hit enter
+2) Browser sends a HTTP request to server
+3) Web Container receives the HTTP request
+4) Web container deserializes the request (HttpServletRequest) => JavaEE
+5) Web Container calls "Front Controller" (DispatcherServlet) (Start - Must be Thread Safe)
+6) Front Controller maps request to Particular Controller Method and calls it.
+7) Controller computes response
+8) Controller returns response to Front Controller
+9) Front Controller render response and returns to Container
+10) Container returns response to client
+
+
+Flux is the Promise => List Objects
+Mono => Single Object
+
+Transactions
+A unit of actions with the following ACID:
+Atomicity: This principle ensures that a transaction is treated as a single unit. All changes occur together or no changes occur.
+Consistency: The transaction transforms the system from one consistent state to another.
+Isolation: Data used in one transaction cannot be used in other transactions until the transaction is committed
+Durability: Once a transaction is committed, its effects are guaranteed to be persistent.
+
+Local transactions
+▪ 1 transactional resource (database, message bus)
+▪ The transaction is managed by the database
+▪ Simple
+▪ Fast
+
+ Global transactions
+▪ More than 1 transactional resource (database,
+message bus) used within 1 transaction
+▪ The transaction is managed by the transaction manager in the Java EE application server
+▪ Also called XA transactions
+▪ Only needed when 2 transactional resources are
+used within one transaction
+▪ 2 Phase commit
+
+transaction propagation is related to how transactions interact with each other,
+
+Transaction propagation
+▪ REQUIRED => Default Mostly Used
+▪ REQUIRES_NEW ▪ MANDATORY
+▪ SUPPORTS
+▪ NEVER
+▪ NOT_SUPPORTED
+
+@Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.REPEATABLE_READ)
+
+Transaction demarcation
+Transaction demarcation is typical at the level of the service classes.
+Transaction demarcation refers to the process of defining the boundaries of a database transaction within your code.
+It essentially marks the beginning and end of a sequence of operations that should be treated as a single unit according to the ACID properties (Atomicity, Consistency, Isolation, Durability).
+
+@Transactional
+public class ProductService{
+    public void add(){..}
+    public void sub(){..}
+}
+add method is one transaction , sub is one transaction
+
+Rollback
+1. The transaction manager by default only does a rollback for runtime exceptions.
+
+Checked Exception Rollback (It only work for rollbackFor)
+@Transactional(rollbackFor = {DAOException.class})
+
+OPTIMISTIC CONCURRENCY
+ Optimistic concurrency assumes that lost update conflicts generally don’t occur
+▪ But keeps versions# so that it knows when they do ▪ Uses read committed transaction level
+▪ Guarantees best performance and scalability
+▪ The default way to deal with concurrency
+
+Lost Update => the last updated one win (last commit win and first commit lose)
+To solve lost update issue by doing Optimistic concurrency=> put @Version (At that time, only first commit wins )
+When a version conflict occurs, Hibernate throws a StaleObjectStateException
+ public class Car {
+    @Id
+    private String brand;
+    private String year;
+
+    @Version
+    private int version;
+    ...
+ }
+
+ Core of Spring
+ 1. DI
+ 2. AOP
+ 3. Enterprise Service Template
+
+Dependency Injection
+Spring instantiates objects and wires them together by injecting dependencies from the outside.
+
+What is AOP?
+Separate the crosscutting concerns (plumbing code) from the business logic code.
+
+Order of Execution
+   1) Instantiate an instance of ApplicationContext
+   2) Start reading and processing config (XML, @, Java, Hybrid)
+   3) Detect beans and start instantiating "eager" beans
+       3a) If DI is constructor, do DI
+   4) Property/Field Injection
+   5) Call the init method if exists
+   6) Call run()
+   7) App runs
+   8) App shutdown => context close
+   9) Call destroy methods (@PreDestroy)
+
+Spring beans are default singletons and eager.
+
+Prototype beans are lazy and not singleton(prototype)
+
+Inversion of Control
+Transferring the control of object creation and management from the main program to a framework, promoting loose coupling and enhancing modularity.
+
+Types of DI
+▪ Property injection
+▪ Constructor injection
+▪ Field injection
+
+3 types of autowiring
+▪ By name
+▪ By Type
+▪ Constructor
+
+Component => Service, Repository, Controller
+
+@Qualifier("myEmailService") => Byname
+
+//Set the Default Value
+@Value("smtp.server.com")
+private String emailServer;
+
+@Value(" ${smtpserver}")
+smtpsever=smtp.server.com
+
+@configuration
+public class configuration.AppProperties {
+    @Bean
+    @Lazy(true)
+    public CustomerService customerService(){
+        return new CustomerServiceImpl();
+    }
+    @Bean
+    @Scope(value="prototype")
+    public EmailService emailService(){
+        return new EmailServiceImpl();
+    }
+}
+
+▪ Java config + autowiring
+@configuration
+public class configuration.AppProperties {
+    @Bean
+    public CustomerService customerService(){
+        return new CustomerServiceImpl();
+    }
+    @Bean
+    public EmailService emailService(){
+        return new EmailServiceImpl();
+    }
+}
+public class CustomerServiceImpl implements CustomerService {
+    @Autowired
+    private EmailService emailService;
+    public void addCustomer() {
+        emailService.sendEmail();
+    }
+}
+
+Simplest configuration
+▪ Java config + classpath scanning + autowiring
+@configuration
+@ComponentScan
+public class configuration.AppProperties {
+}
+
+Spring configuration
+Option 1
+@SpringBootApplication
+public class SpringBootApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringBootApplication.class);
+        CustomerService customerService = context.getBean("customerServiceImpl",CustomerService.class);
+        customerService.addCustomer();
+    }
+}
+
+Option 2
+@configuration
+@ComponentScan
+public class configuration.AppProperties {
+}
+@SpringBootApplication
+public class SpringBootApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(configuration.AppProperties.class);
+        CustomerService customerService = context.getBean("customerServiceImpl",CustomerService.class);
+        customerService.addCustomer();
+    }
+}
+
+***Option3
+public class SpringBootApplication implements CommandLineRunner{
+    @Autowired
+    private CustomerService customerService;
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootApplication.class, args);
+    }
+
+    @Override
+    public void run(String...args) throws Exception{
+        customerService.addCustomer();
+    }
+}
+
+Except Option3, you have to define @PropertySource if you use application.properties.
+@SpringBootApplication
+@PropertySource("classpath:application.properties")
+
+Two DIs problem
+1. By @Qualifier
+@Autowired
+@Qualifier(value="greetingOne")
+private Greeting greeting;
+
+2. By @Profile
+@Profile("One")
+public class GreetingOne implements Greeting{
+}
+
+Component Scanning
+1) package demo => Spring will automatically scan all classes in the package demo and all sub package of demo
+2) @ComponentScan(basePackages = {"Service"}) => Specify packages
+
+Layered Architecture
+Presentation(Web) Layer => @Controller
+    ~ HTTP controller
+    (Client)
+Service Layer => @Service => (Faced) Link with Web to be able to follow encapsulation
+    ~ Connects plumbing(technical) classes together
+    (AccountService)
+Domain Layer => Cause of Singleton (Plain Object)
+    ~ Domain classes (Contains no technical code -mean business logics)
+    (Account / AccountEntry)
+Integration Layer => @Component
+    ~ Logging
+    ~ Sending an email/Sending a message
+    (JMS Sender)
+    ~ Calling another application
+Data Access Layer => @Repository
+    ~ Database
+    ~ Other persistency
+    (Account Repository)
+
+ DI Layered Architecture
+ Web ---> Service
+ Service ---> Repository (Data Access)
+ Service ---> Integration (SendMail)
+
+ Facade Pattern:
+ A design pattern that simplifies a complex subsystem by providing a single, easy-to-use interface.
+ It hides the underlying implementation details and orchestrates interactions with multiple services or functionalities.
+ The facade pattern focuses on presentation and usability.
+
+ What is AOP?
+ AOP stands for Aspect-Oriented Programming.
+ It's a programming that focuses on improving code modularity by separating cross-cutting concerns.
+
+Crosscutting concern
+ A cross-cutting concern in software development is a functionality that affects multiple parts of your program
+
+ AOP Concepts
+ ▪ Joinpoint
+    In AOP, a joinpoint is a specific point during program execution where aspects can be applied.
+ ▪ Pointcut
+    A collection of 1 or more joinpoints
+ ▪ Aspect
+    In AOP, an aspect is a reusable module that encapsulates a cross-cutting concern.
+    ~ A component in AOP that contains code for cross-cutting concerns like logging or transaction
+ ▪ Advice
+    The implementation of crosscutting concerns, such as logging or security, which are applied at specific joinpoints in the program's execution
+        #Before
+         ~ First call the advice method and then the business logic method
+        #After returning
+         ~ First call the business logic method and when this business logic method returns normally without an exception, then call the advice method
+         *** afterReturningAdvice method will be called only if processOrder method completes without throwing any exceptions.
+        #After throwing
+         ~ First call the business logic method and when this business logic method throws an exception, then call the advice method
+        #After (finally)
+         ~ First call the business logic method and then call the advice method (independent of how the business logic method returned: normally or with exception)
+        #Around
+         ~ First call the advice method. The advice method calls the business logic method, and when the business logic method returns, we get back to the advice method
+ ▪ Weaving
+    Weaving refers to the process of combining aspects with your existing code to create a new version with the functionalities from the aspects included.
+    Proxy-based weaving => RunTime
+@Aspect
+public class TraceAdvice{
+@AfterReturning(pointcut="execution(* mypackage.Customer.getAge(..))",returning="retValue")
+@AfterThrowing(pointcut="execution(* mypackage.Customer.getAge(..))",throwing="exception")
+@After("execution(* mypackage.Customer.setName(..)) && args(name,age)")
+
+To detect, register, and manage the class as a bean within the application context
+~ @Component, @Service, @Repository, @Controller) is crucial for Spring
+If you miss any of them,
+~ No Bean Registration
+~ No Proxy Creation
+~ No Advice invocation
+
+Disadvantage of a proxy
+If a business method calls another business method of the same object,
+target is the domain object, not the proxy, so AOP advices are not called.
+
+Query Techniques
+▪ Query creation from method names
+     List<Dog> findByNameContaining(String subName);
+     List<Dog> findByHeightLessThanOrAgeGreaterThan(Double height,Integer age);
+     List<Dog> findByDateOfBirthBetween(Date start,Date end);
+     Dog findFirstByName(String name);
+     List<Dog> findDistinctTitleBy();
+     List<Dog> findByNameIgnoreCase();
+▪ Using @Query
+    @Query("select c from Customer c where c.address.state.code = :code")
+    String findByCountry(@Param("code") String code);
+    select b from Book b where b.price between 10 and 15
+    select b.title from Book b order by b.price asc
+    select c from Customer c where c.address.city = 'ABC'
+▪ Using named queries
+    @Entity
+    @NamedQuery(name="Employee.findByFirst", query="select e from Employee e.first = 'first'")
+    List<Employee> findByFirst(@Param("first") String first);
+▪ Using native queries
+    @Query(value = "Select e from customer where email = :email", nativeQuey = true)
+    Customer findByEmail(@Param("email") String email);
+
+Modifying Statements
+@Modifying
+@Transactional
+@Query("update Customer c set c.firstname = :firstname where c.lastname = :lastname")
+int setFixedFirstNameFor(@Param("firstname") String firstName,
+                         @Parma("lastname") String lastName);
+
+update customer c set c.status = 'Gold' where c.orders > :numberOfOrders
+delete customer c where c.status = :status
+
+Default sort => asc
+
+Optimization
+N+1 problem
+Initial Query (1 Query): The application executes a query to fetch a list of parent entities. This is the initial query.
+Subsequent Queries (N Queries): For each parent entity, the application executes a separate query to fetch its related child entities. If there are N parent entities, this results in N additional queries.
+Thus, the total number of queries executed becomes 1 (initial query) + N (subsequent queries) = N+1 queries.
+
+To solve N+1 problem, use join fetch
+Many To One => select c from Customer c join fetch c.address where c.address = :address;
+Cartesian product is found only on oneToMany
+OneToMany => select distinct c from Customer c join fetch c.address where c.address = :address;
+
+@RestController directly return the response body, and the data is written directly to the HTTP response as JSON or XML
+Methods in a @Controller typically return a String that indicates the view name or a ModelAndView object.
+@Controller
+public class WebController {
+
+    @GetMapping("/welcome")
+    public String welcome(Model model) {
+        model.addAttribute("message", "Welcome to our website!");
+        return "welcome"; // Resolves to a view named "welcome.html" or "welcome.jsp"
+    }
+}
+@RestController
+public class ApiController {
+
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "Welcome to our website!"; // The response body will be "Welcome to our website!"
+    }
+}
+@Controller
+public class CityController {
+
+    @GetMapping("/cities")
+    @ResponseBody
+    public List<City> getCities() {
+        return cityService.getAllCities(); // Returns the list as JSON
+    }
+}
+@RestController
+public class CityController {
+
+    @GetMapping("/cities")
+    public List<City> getCities() {
+        return cityService.getAllCities(); // Returns the list as JSON
+    }
+}

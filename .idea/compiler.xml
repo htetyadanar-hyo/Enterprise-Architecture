@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Lab13PartA-Bank-rest-server" />
+        <module name="Day2SpringCore" />
+        <module name="Lab6PartA" />
+        <module name="Lab6PartB" />
+        <module name="BankApplicationPart3" />
+        <module name="project" />
+        <module name="lesson03-spring-jpa-customer" />
+        <module name="Day2SpringBoot" />
+        <module name="Lab7PartB" />
+        <module name="Lab4PartA" />
+        <module name="Lab7PartA" />
+        <module name="Lab7PartC" />
+        <module name="Lab1PartD" />
+        <module name="Lab1PartE" />
+        <module name="project (1)" />
+        <module name="Lab4PartB" />
+        <module name="Lab5PartC" />
+        <module name="Lab2PartA" />
+        <module name="Day3AOP" />
+        <module name="Lab12PartC" />
+        <module name="BankApplicationPart3 (1)" />
+        <module name="Lab12PartA" />
+        <module name="Lab8PartA" />
+        <module name="Day4JPA" />
+        <module name="Lab5PartB" />
+        <module name="Lab8PartD" />
+        <module name="Lab5PartA" />
+        <module name="Lab14PartB" />
+        <module name="Day1SpringIntro" />
+        <module name="AccountService" />
+        <module name="Lab11PartB-Bank-rest-server" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Lab13PartA-rest-client" target="21" />
+      <module name="Lab9PartB" target="21" />
+      <module name="Lab_1" target="21" />
+      <module name="lesson09-rest-client" target="21" />
+      <module name="lesson09-rest-contact-server" target="21" />
+      <module name="Lesson1Intro" target="21" />
+      <module name="SpringFramework" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AccountService" options="-parameters" />
+      <module name="BankApplicationPart3" options="-parameters" />
+      <module name="BankApplicationPart3 (1)" options="-parameters" />
+      <module name="Day2SpringBoot" options="-parameters" />
+      <module name="Day3AOP" options="-parameters" />
+      <module name="Day4JPA" options="-parameters" />
+      <module name="Lab11PartB-Bank-rest-server" options="-parameters" />
+      <module name="Lab12PartA" options="-parameters" />
+      <module name="Lab12PartC" options="-parameters" />
+      <module name="Lab13PartA-Bank-rest-server" options="-parameters" />
+      <module name="Lab13PartA-rest-client" options="-parameters" />
+      <module name="Lab14PartB" options="" />
+      <module name="Lab2PartA" options="-parameters" />
+      <module name="Lab4PartA" options="-parameters" />
+      <module name="Lab4PartB" options="-parameters" />
+      <module name="Lab5PartA" options="-parameters" />
+      <module name="Lab5PartB" options="-parameters" />
+      <module name="Lab5PartC" options="-parameters" />
+      <module name="Lab6PartA" options="-parameters" />
+      <module name="Lab6PartB" options="-parameters" />
+      <module name="Lab7PartA" options="-parameters" />
+      <module name="Lab7PartB" options="-parameters" />
+      <module name="Lab7PartC" options="-parameters" />
+      <module name="Lab8PartA" options="-parameters" />
+      <module name="Lab8PartD" options="-parameters" />
+      <module name="Lab9PartB" options="-parameters" />
+      <module name="Lesson1Intro" options="-parameters" />
+      <module name="lesson03-spring-jpa-customer" options="-parameters" />
+      <module name="lesson09-rest-client" options="-parameters" />
+      <module name="lesson09-rest-contact-server" options="-parameters" />
+      <module name="project" options="-parameters" />
+      <module name="project (1)" options="-parameters" />
+    </option>
+  </component>
+</project>

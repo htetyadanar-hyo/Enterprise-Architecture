@@ -1,0 +1,31 @@
+POST => Create
+localhost:8080/sys-admin/course-offerings
+
+body
+{
+    "credits": 4.0,
+    "room": "V17",
+    "start_date": "2024-06-16",
+    "end_date": "2024-06-17",
+    "capacity": 50,
+    "course_offering_type": "Compro",
+    "courseId": 1,
+    "facultyId": 1,
+    "session_list": []
+}
+
+PUT => Update
+localhost:8080/sys-admin/course-offerings/1
+
+body
+{
+    "credits": 3.8,
+    "room": "V17",
+    "start_date": "2024-06-16",
+    "end_date": "2024-06-17",
+    "capacity": 50,
+    "course_offering_type": "Compro",
+    "courseId": 1,
+    "facultyId": 1,
+    "session_list": [0]
+}

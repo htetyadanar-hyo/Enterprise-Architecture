@@ -1,0 +1,135 @@
+JDBC and JPA Notes
+
+Object-Relational Mismatch
+1. Objects have identity (means its own reference)
+   Relational DB,primary key are used to identity.
+2. Objects have association (1 to 1, 1 to many,..)
+   Relational DB has foreign keys to link table.
+3. OO has inheritance
+   Relational has no inheritance
+4. Data can be accessed by associations
+   Data can be accessed by queries and joins
+
+Disadvantage of JDBC
+▪ Code duplication
+    ▪ Open and closing connection
+    ▪ Transaction handling
+    ▪ Exception handling
+▪ Try-catch-finally-try-catch code
+▪ Large number of lines of JDBC code
+▪ In case of a SQLException, the database returns a database-specific error code
+
+Spring JDBC
+JDBCTemplate takes care of
+    ▪ Open and closing JDBC connection
+    ▪ Transaction handling
+    ▪ Exception handling
+        JDBC throws a java.sql.SQLException
+        ▪ Checked exception, must be caught
+        JDBCTemplate throws a DataAccessException
+        ▪ Runtime exception
+
+Two main advantages of ORM databases versus plain databases
+1. Developer Productivity and Ease of Use
+    ~ reducing the need for writing extensive SQL queries
+2. Maintenance is easier
+    ~ Mapping is defined at one place
+3. Performance
+    ~ Caching
+    ~ Allows easy switching between different database systems with minimal code changes.
+
+What is JPA?
+Java Persistence API (JPA) is a specification for managing relational data in Java applications.
+▪ Java Persistence API
+▪ Java EE standard for persistence with an ORM
+
+JPA methods
+find() => Retrieve the entity object given the id
+    ~ find() like that js, return the same type of reference
+persist() => Saves
+merge() => update
+remove() => delete
+createQuery() => specify a JPQL query which will be translated into a SQL statement that is sent to the database
+
+@Entity => (required)
+@Table(name="MY_PERSON") => Map class to "My_Person" table
+public class Person{
+    @Id => (required)
+    @GenerateValue => (Optional but id is generated to map the primary key  and property)
+    ***Hibernate requires it to specify the property that will map to the primary key***
+    @Column(name="PERSON_ID") => Map to "Person_ID" column
+    private long id;
+}
+
+1. Hibernate is implementation of JPA
+2. JPA is interface
+3. Entity Manager (It is not singleton)
+    ~ The EntityManager is a core component of JPA.
+    ~ It manages the lifecycle of entities and provides an API for performing CRUD (Create, Read, Update, Delete) operations on the underlying database.
+
+Spring 4 DAO interface
+Customer => Entity Type
+Long => Id Type
+public interface CustomerRepository extends JpaRepository<Customer, Long>{
+}
+@PersistenceContext => want to call often
+@EnableJpaRepositories("repository") => package where to find the repository
+@EntityScan("domain") => package where to find the entities
+
+Primary Key
+▪ Unique
+▪ Constant
+▪ Required
+    ▪ Value can never be null
+Primary key types:
+▪ Natural key
+    ▪ Has a meaning in the business domain
+▪ Surrogate key (Better than natural key)
+    ▪ Has no meaning in the business domain
+    ▪ Best practice
+
+▪ Generated identity values
+    ▪Ensure identity uniqueness
+▪ Private setId() methods
+    ▪Ensure identity immutability
+Id cannot be set by the application
+private void setId(long id) { this.id = id; }
+
+Generation Strategies
+##AUTO => Selects the best strategy for your database
+@Entity
+public class Person{
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="Person_Id)
+    private long id;
+}
+~ Defaults to ‘AUTO’ when not specified
+
+###IDENTITY => Use an identity column(MS SQL,MySQL,HSQL,...)
+~ Identity columns are columns that can automatically generate the next unique id
+~ ▪ If your database support identity columns the native strategy will default to using them
+@Entity
+public class Person{
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private long id;
+}
+
+###Sequence
+~ By default Hibernate only uses a single sequence called ‘hibernate-sequence’
+~ You can specify additional custom sequences
+@Entity
+@SequenceGenerator(name="personSeq", sequenceName="PERSON_SEQUENCE")
+public class Person{
+    @Id
+    @GeneratedValue(generator="personSeq")
+    private long id;
+}
+
+
+What is facade?
+A design pattern that provides a simplified interface to a complex subsystem,
+making it easier to use and reducing the dependency of the client code on the subsystem's detailed implementation.
+The EntityManager is the primary JPA interface used to interact with the persistence context.
+It is often considered a facade because it provides a simplified interface for performing CRUD (Create, Read, Update, Delete) operations, managing the lifecycle of entities, and executing queries.

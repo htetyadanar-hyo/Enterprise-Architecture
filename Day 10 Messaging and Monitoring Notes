@@ -1,0 +1,238 @@
+Day10 Messaging and Monitoring Notes
+
+Producers generate and send data.
+Brokers handle the receipt, storage, and forwarding of data.
+Topics: Named queues that store messages, allowing for organized message handling.
+Consumers retrieve and process data.
+ZooKeeper manages the cluster of brokers, ensuring coordination, configuration management, and fault tolerance.
+
+            +-------------------------------------+
+            |               Producer              |
+            |-------------------------------------|
+            |  - Sends messages to "payments"     |
+            |  - Sends messages to "orders"       |
+            +-------------------------------------+
+
++------------------------------------------------------------+
+|                           Broker                           |
+|------------------------------------------------------------|
+|  Topics:                                                   |
+|  - payments: Stores payment-related messages               |
+|  - orders: Stores order-related messages                   |
++------------------------------------------------------------+
+
+            +-------------------------------------+
+            |               Consumer              |
+            |-------------------------------------|
+            |  - Subscribes to "payments"         |
+            |  - Subscribes to "orders"           |
+            +-------------------------------------+
+
+Event Sourcing
+Producer
+  |
+  v
++--------------------------------------------------+
+|                Append-Only Log                   |
+|--------------------------------------------------|
+| 1 | 2 | 3 | 4 | 5 | 6 | ...                      |
+|--------------------------------------------------|
+| Older Events              | Newer Events         |
++--------------------------------------------------+
+Example Scenario
+User Registration:
+UserRegistered event is generated and appended to the log.
+User Updates Profile:
+UserProfileUpdated event is appended to the log.
+User Places an Order:
+OrderPlaced event is appended to the log.
+By replaying these events in order, the system can accurately reconstruct the user's current state, including their registration details, profile updates, and order history.
+Event sourcing provides a robust and flexible way to manage state changes, ensuring that the system has a reliable history of all actions and can reconstruct any past state by replaying events.
+
+
+Producers:
++-------------------------------------+   +-------------------------------------+
+|  User Service                       |   |  Order Service                      |
+|-------------------------------------|   |-------------------------------------|
+|  UserRegistered                     |   |  OrderPlaced                        |
+|  UserUpdated                        |   |  OrderCancelled                     |
++-------------------------------------+   +-------------------------------------+
++-------------------------------------+
+|  Payment Service                    |
+|-------------------------------------|
+|  PaymentProcessed                   |
+|  PaymentFailed                      |
++-------------------------------------+
+
+                |
+                v
+
++--------------------------------------------------+
+|                Event Store                       |
+|--------------------------------------------------|
+|  UserRegistered, UserUpdated, OrderPlaced,       |
+|  OrderCancelled, PaymentProcessed, PaymentFailed |
++--------------------------------------------------+
+
+                |
+                v
+
+Consumers:
++-------------------------------------+   +-------------------------------------+
+|  Inventory Service                  |   |  Notification Service               |
+|-------------------------------------|   |-------------------------------------|
+|  Subscribes to OrderPlaced          |   |  Subscribes to UserRegistered,      |
+|  Updates stock levels               |   |  OrderPlaced, PaymentProcessed      |
+|                                      |   |  Sends notifications                |
++-------------------------------------+   +-------------------------------------+
++-------------------------------------+
+|  Analytics Service                  |
+|-------------------------------------|
+|  Subscribes to all events           |
+|  Updates dashboards, analytics      |
++-------------------------------------+
+Scenario with Multiple Producers and Consumers
+Producers:
+User Service: Generates UserRegistered, UserUpdated events.
+Order Service: Generates OrderPlaced, OrderCancelled events.
+Payment Service: Generates PaymentProcessed, PaymentFailed events.
+Event Store:
+Stores all the above events in a time-ordered, immutable log.
+Consumers:
+Inventory Service: Subscribes to OrderPlaced events to update stock.
+Notification Service: Subscribes to UserRegistered, OrderPlaced, PaymentProcessed events to send notifications.
+Analytics Service: Subscribes to all events to update dashboards and perform analytics.
+
+
+messaging => Asynchronous
+rest => Synchronous
+
+rest => point-to-point
+jms =>
+
+.send(message) => blocking call (synchronous)
+
+.receive (message) => non-blocking call (asynchronous)
+
+the terms "unmarshalling" and "marshalling" refer to the processes of converting data between different formats.
+Marshalling:
+This is the process of converting a Java object into a format that can be easily transported or stored, such as XML or JSON.
+Unmarshalling:
+This is the reverse process, where data in a specific format (like XML or JSON) is converted back into a Java object.
+
+Default => parallel programming
+
+Thread-Safe =>
+class A{
+    void m(){
+        B b;
+        ....
+        b = m;
+        ....
+    }
+}
+class A{
+    B m(){
+        B b;
+        ....
+        b = m;
+        ....
+        return b;
+    }
+    void n(B b){
+        b....
+    }
+
+}
+
+
+Non Thread-Safe =>
+class A{
+    B b;
+    void m(){
+        ....
+        b = m;
+        ....
+    }
+}
+
+Computer cluster:
+A computer cluster is a group of interconnected computers working together as a single system.
+Each computer in the cluster, called a node, acts like an individual grape, but together they provide more processing power or storage capacity than a single computer.
+This allows them to tackle tasks that would be too demanding for one machine.
+
+Kafka Replication
+In Apache Kafka, replication refers to creating copies of data partitions across multiple brokers (servers) in the cluster.
+By using replication, Kafka ensures that your data is highly available and fault-tolerant, making it a reliable platform for handling critical data streams.
+
+Kafka
+Imagine Kafka like a fast-flowing river of information.
+Instead of water, it carries important messages (events) from different sources (producers) to various destinations (consumers) that need that data.
+Superhighway for Messages: (High-throughput messaging system)
+Kafka acts as a central hub for these messages, ensuring they flow smoothly and quickly between producers and consumers.
+It can handle a massive amount of data, like a river carrying a large volume of water.
+Always Available (Highly Available):
+If a part of the river gets blocked (a server fails), Kafka automatically reroutes the messages (data) using backups (replicas) store
+Organized by Topic: (Replication)
+Think of topics as folders in the river. Each topic holds a specific kind of message.
+Replication is the technical term for how messages are organized. It ensures that multiple copies of each message exist on different servers, allowing Kafka to maintain access to the data even if a server fails.
+Real-time Processing: (Low-latency messaging)
+Consumers can react to messages as soon as they arrive, allowing for immediate actions based on the information received.
+
+Common Logging Levels (from least to most severe):
+DEBUG:
+Detailed information for debugging purposes (e.g., variable values, function calls)
+INFO:
+Informational messages about normal program flow (e.g., successful login, order placed)
+WARNING:
+Potential issues that don't prevent the program from running but should be investigated (e.g., low disk space)
+ERROR:
+Errors that may cause malfunctions but don't necessarily halt execution (e.g., database connection failed)
+CRITICAL:
+Severe errors that halt program execution (e.g., system crash)
+By configuring logging levels, you can control the amount of information logged based on its significance. This helps you focus on the most critical issues when troubleshooting or monitoring your system.
+TRACE:
+Trace logging level is the most detailed level in the hierarchy of logging levels. It provides a granular, step-by-step account of everything that's happening within your program's execution.
+
+Spring Boot Actuator
+Spring Boot Actuator is a sub-project of Spring Boot that provides a set of features for monitoring and managing your application.
+It exposes various endpoints (URLs) that you can access to retrieve information about your application's health, metrics, configuration details, and more.
+Key Features:
+Health Endpoint (/actuator/health):
+Provides a quick overview of your application's overall health, indicating whether critical components are up and running.
+Metrics Endpoint (/actuator/metrics):
+Exposes various metrics about your application's performance, such as memory usage, CPU utilization, and HTTP request counts.
+Environment Endpoint (/actuator/env):
+Displays all the environment variables your application is using.
+Beans Endpoint (/actuator/beans):
+Lists all the beans (managed objects) created by Spring in your application.
+Logging Endpoint (/actuator/loggers):
+Allows you to dynamically change the logging level for different categories in your application.
+Shutdown Endpoint (/actuator/shutdown):
+Provides a way to gracefully shut down your application.
+
+Monitor app.Application Health:
+Regularly check the /actuator/health endpoint to ensure all components are healthy and functioning properly.
+Analyze Performance:
+Access metrics from the /actuator/metrics endpoint to identify potential bottlenecks or resource limitations.
+Debug Issues:
+If an error occurs, you can use the /actuator/beans and /actuator/env endpoints to inspect the application's state and configuration for debugging purposes.
+Remote Shutdown:
+In case of a critical issue, you can use the /actuator/shutdown endpoint (with appropriate security measures) to gracefully shut down the application remotely.
+
+ELK Stack
+The ELK Stack is a popular open-source collection of tools used for log management and data analysis. It stands for:
+Elasticsearch:
+A powerful search and analytics engine built on top of Apache Lucene. It excels at storing, searching, and analyzing large volumes of data in near real-time.
+Logstash:
+A data processing pipeline that collects data from various sources, transforms it into a common format, and then ships it to Elasticsearch for indexing.
+Kibana:
+A user interface for visualizing the data stored in Elasticsearch. It allows you to create dashboards, charts, and other visualizations to explore and understand your logs and data.
+Beats:
+(Client side) Data shipper that sends data either into elasticsearch or to Logstash for additional processing
+
+Scenario:
+Data Collection (Logstash): Logstash acts as the entry point for your data. It can collect logs from various sources such as application servers, network devices, system logs, and more.
+Data Processing (Logstash): In Logstash, you can filter, parse, and enrich the collected data to make it more structured and usable for analysis. You can also define custom pipelines to handle different types of data sources.
+Data Storage (Elasticsearch): Logstash then ships the processed data to Elasticsearch, where it's indexed and stored for efficient searching and retrieval.
+Data Analysis and Visualization (Kibana): Kibana allows you to interact with the data stored in Elasticsearch. You can create dashboards, charts, and graphs to analyze trends, identify patterns, troubleshoot issues, and gain insights from your logs and other data sources.

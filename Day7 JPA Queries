@@ -1,0 +1,33 @@
+Day7 JPA Queries
+
+
+Default sort => asc
+
+c.address.city => city resolve in Join => implicit join
+
+n + 1 => problem in jpa
+
+cartesian product is found only on oneToMany.
+a Cartesian product (also known as a cross join) occurs when you combine all rows from two or more tables, where each row from the first table is paired with every row from the second table.
+To solve this => use distinct
+
+Fetching
+"fetch" refers to the strategy or method used to retrieve related entities from the database.
+Fetching determines when and how related entities are loaded into memory.
+EAGER Fetching: The related entities are loaded immediately with their parent entity.
+With eager fetching, related entities are fetched from the database as part of the initial query.
+LAZY Fetching: The related entities are loaded on-demand, when they are accessed for the first time
+With lazy fetching, related entities are not loaded until they are explicitly accessed.
+
+
+The N+1 problem in JPA occurs when an initial query to fetch entities is followed by N additional queries to fetch related entities, leading to performance issues.
+
+To solve N+1 problem,
+use fetch join => ManyToOne, OneToMany
+however, cartesian problem is occured
+use @EntityGraph
+use caching
+Initial Query (1 Query): The application executes a query to fetch a list of parent entities. This is the initial query.
+Subsequent Queries (N Queries): For each parent entity, the application executes a separate query to fetch its related child entities. If there are N parent entities, this results in N additional queries.
+Thus, the total number of queries executed becomes 1 (initial query) + N (subsequent queries) = N+1 queries.
+Caching can be used to mitigate the N+1 problem by storing the fetched entities in a cache,

@@ -1,0 +1,95 @@
+Day11 Job Scheduling
+
+1. JDK Timer: java.util.Timer => Single Thread
+2. Quartz Scheduling => Allow Concurrent Transaction (Cron-based scheduling)
+
+Scheduling basics
+1. Job
+2. Trigger
+3. Schedule
+
+Cron
+0/5:
+This means "every 5 minutes starting at minute 0".
+If your system's minute starts at 0, it will run at 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, and 55.
+*/5:
+This means "every 5 minutes".
+If your system starts counting minutes from a non-zero value, */5 will still run at 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 0 (once it wraps around).
+
+SpringBootApplication
+@EnableScheduling
+public class SpringBootSchedulingApplication {
+
+@Component
+public class WelcomeTask {
+    @Scheduled(fixedRate = 5000)
+    public void welcome() {
+
+fixedRate => ParallelProgramming
+
+fixedDelay: Measures the interval from the end of one execution to the start of the next.
+    Suitable for tasks where you want a consistent delay after completion.
+fixedRate: Measures the interval from the start of one execution to the start of the next.
+    Suitable for tasks where you want a consistent interval between starts.
+
+The key differences between JDK Timer and Quartz cron
+Simple Tasks: If you need to schedule simple tasks with fixed delays or intervals, JDK Timer might suffice.
+Complex Scheduling: When you require cron expressions, persistence, or more advanced features, Quartz is the better choice.
+Integration: If you're already using Spring or another framework with Quartz integration, it becomes a more natural fit.
+
+Event => synchronous
+
+By adding @Async => can be able to change to async
+Synchronous and asynchronous event handling
+Example Scenario
+Suppose a customer places an order:
+Synchronous:
+The OrderService publishes OrderPlacedEvent.
+It waits for InventoryService, EmailService, InvoiceService, and WarehouseService to process the event one by one.
+If InventoryService takes 2 seconds, EmailService takes 1 second, InvoiceService takes 1 second, and WarehouseService takes 1 second, the total processing time will be 5 seconds.
+
+To implement a synchronous event handling system in Spring Boot, we'll create an event (OrderPlacedEvent), an event publisher (OrderService),
+and multiple event listeners (InventoryService, EmailService, InvoiceService, and WarehouseService).
+The listeners will process the event one by one in a synchronous manner.
+public class OrderPlacedEvent {
+}
+@Service
+public class OrderService {
+}
+@Service
+public class InventoryService {
+    @EventListener
+    @EventListener
+        public void handleOrderPlacedEvent(OrderPlacedEvent event)
+
+Asynchronous:
+The OrderService publishes OrderPlacedEvent.
+All services start processing the event simultaneously.
+The total processing time is determined by the longest task, which in this case is 2 seconds.
+By using asynchronous event handling, you can significantly reduce the total processing time and improve the system's responsiveness. However, you need to manage concurrency issues and ensure thread safety.
+
+Asynchronous events
+@Service
+@EnableAsync
+public class Listener {
+    @Async
+    @EventListener
+    public void onEvent(AddCustomerEvent event) {
+    }
+
+@EnableAsync
+public class  MyServiceImpl implements MyService {
+    @Async
+    public void welcome() {
+
+If the return of every method is void, we can use @Async
+Please don't use on @Async on other type
+
+Advantages of @ConfigurationProperties
+▪ Relaxed binding
+    ▪ If the property is db.username
+    ▪ Then these all will work: ▪ db.user-name
+    ▪ db.user_name
+    ▪ db.UserName
+▪ Property validation =>@NotBlank,@Size(max = 15, min = 6)
+

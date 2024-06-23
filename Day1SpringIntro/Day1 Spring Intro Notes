@@ -1,0 +1,174 @@
+Day 1 Spring Intro Notes
+
+Enterprise Architecture Layers
+- Web
+- Service
+- Domain
+- Integration
+- Data Access
+
+What is an enterprise application?
+- Web presentation
+- Business logic
+- Data access
+- Integration
+
+What is Spring?
+-Lightweight enterprise Java Framework
+-Open source
+
+Aim of the Spring framework
+▪ POJO-based programming
+    ~ No EJB
+    ~ Promotes Object-Oriented principles
+    ~ Simple to understand
+    ~ Simple to refactor
+    ~ Simple to unit test
+▪ Separation of concern
+▪ Flexibility
+
+Domain-Driven Design (DDD)
+1. All business logic is captured in the domain model that reflects the real world domain.
+2. The business logic objects are independent of the enterprise service objects.
+
+Advantages of DDD
+▪ Business logic is independent of technology changes business logic,messaging,logging, persistency
+  ▪ Switching between technology is easy
+  ▪ Business logic is easy to understand
+▪ Easy to write, test, modify
+
+
+Core of Spring
+▪ Dependency Injection (Spring instantiates objects and wires them together by injecting dependencies from the outside)
+    Dependency Injection (DI) is a design pattern used to implement Inversion of Control (IoC) in software development,
+    ~ Constructor Injection
+    ~ Setter Injection
+    ~ Field Injection
+    **With dependency injection it is easy to switch between the AccountRepository and the MockAccountRepo
+▪ Aspect-Oriented Programming (AOP) (Separate the code)
+    ~ Write the business logic without worrying about the enterprise services (security,
+    transactions, logging, etc)
+    ~ Write the enterprise services
+    ~ Weave them together
+▪ Enterprise Service Templates
+    ~ Makes programming the different enterprise service API’s simpler.
+        ▪ JDBC template
+        ▪ JMS template
+        ▪ JavaMail template
+        ▪ Hibernate template
+    ~ Let the programmer focus on what needs to happen instead of complexity of the specific API
+        ▪ Resource management
+        ▪ Exception handling
+        ▪ Try-catch-finally-try-catch blocks
+
+
+Spring Basics
+▪ Reads the Spring XML configuration file
+▪ Instantiates objects declared in the Spring configuration file
+▪ Wires objects together with dependency injection
+▪ Creates proxy objects when needed
+
+
+Singleton & Prototype
+Spring beans are default singletons.
+Singletons mean that you can only create one instance(object).
+If you want to get two different outputs, put scope="prototype" in bean configuration xml file.
+
+
+Init-method & Destroy-method
+init-method => Method called just after the constructor
+destroy-method => Method called when you close the ApplicationContext
+By adding init-method and destroy-method in bean configuration xml file or add annotations @PostConstruct,@PreDestroy, you can call these two methods.
+
+Eager-instantiations & Lazy-instantiations
+When you call xml file, the constructor is eagerly instantiated.
+If you put lazy-init="true" in bean configuration xml file, the constructor is lazy instantiated when you call only call context.getBean.
+
+
+Inversion of Control (IoC)
+- IoC: The framework calls your code
+- A design principle in which the control of objects is transferred from the main program to a framework.
+- This allows the framework to manage the creation, configuration, and lifecycle of objects.
+
+Different way’s to “wire”2 object together
+1. Instantiate an object directly
+    ~ Not Good Way
+    ~ The relation between AccountService and AccountRepository is hard coded
+    ~ If you want to change the AccountRepository implementation, you have to change the code
+    public class AccountService{
+        private AccountRepository accountRepository;
+            public AccountService() {
+            accountRepository = new AccountRepository();
+            }
+            public void deposit(long accountNumber, double amount){
+                Account account=accountRepository.loadAccount(accountNumber);
+                account.deposit(amount);
+                accountRepository.saveAccount(account);
+            }
+    }
+2. Use an interface
+    ~ The relation between AccountService and AccountRepository is still hard-coded
+    ~ We have more flexibility, but if you want to change the AccountRepository implementation to the
+      MockAccountRepository, you have to change the code
+    public class AccountService{
+        private AccountRepository accountRepository;
+            public AccountService() {
+                accountRepository = new AccountRepositoryImpl();
+            }
+            public void deposit(long accountNumber, double amount){
+                 Account account=accountRepository.loadAccount(accountNumber);
+                 account.deposit(amount);
+                 accountRepository.saveAccount(account);
+            }
+    }
+3. Use a factory object
+    ~ The relation between AccountService and AccountRepository is still hard coded
+    public class AccountService{
+        private AccountRepository accountRepository;
+            //factory creates accountRepository object
+            public AccountService() {
+                 AccountRepositoryFactory accountRepoFactory = new AccountRepositoryFactory();
+                 accountRepository = accountRepoFactory.getAccountRepository();
+            }
+            public void deposit(long accountNumber, double amount){
+                 Account account=accountRepository.loadAccount(accountNumber);
+                 account.deposit(amount);
+                 accountRepository.saveAccount(account);
+            }
+    }
+4. Use Spring Dependency Injection
+    ~ The best way.
+    ~ ▪ Flexibility: it is easy to change the wiring between objects without changing code
+      ▪ Unit testing becomes easier
+      ▪ Code is clean
+    public class AccountService{
+        private AccountRepository accountRepository;
+            public AccountService() {
+                 this.accountRepository = accountRepository;
+            }
+            public void deposit(long accountNumber, double amount){
+                 Account account=accountRepository.loadAccount(accountNumber);
+                 account.deposit(amount);
+                 accountRepository.saveAccount(account);
+            }
+    }
+
+By changing ref, you can switch easily mock and accountRepository easily.
+<bean id="accountService" class="AccountService">
+    <property name="accountRepository" ref="accountRepository" />
+</bean>
+<bean id="accountRepository" class="AccountRepositoryImpl" /> <bean id="mockAccountRepository" class="MockAccountImpl" />
+
+
+<bean id="accountService" class="AccountService">
+    <property name="accountRepository" ref="mockAccountRepository" />
+</bean>
+<bean id="accountRepository" class="AccountRepositoryImpl" /> <bean id="mockAccountRepository" class="MockAccountImpl" />
+
+
+
+
+
+
+
+

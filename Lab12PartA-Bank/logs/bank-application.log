@@ -1,0 +1,129 @@
+2024-06-10 17:30:33 - Starting app.Application using Java 21.0.3 with PID 46149 (/Users/htetyadanaroo/Documents/EA/Lab13PartB-Bank/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartB-Bank)
+2024-06-10 17:30:33 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:30:33 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:30:34 - Starting service [Tomcat]
+2024-06-10 17:30:34 - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2024-06-10 17:30:34 - Initializing Spring embedded WebApplicationContext
+2024-06-10 17:30:34 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-10 17:30:34 - HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-06-10 17:30:34 - HHH000026: Second-level cache disabled
+2024-06-10 17:30:34 - HikariPool-1 - Starting...
+2024-06-10 17:30:34 - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ac9e53c
+2024-06-10 17:30:34 - HikariPool-1 - Start completed.
+2024-06-10 17:30:34 - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-06-10 17:30:34 - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2024-06-10 17:30:35 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-06-10 17:30:36 - Started app.Application in 2.774 seconds (process running for 3.255)
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - createAccount with parameters accountNumber= 1263862 , customerName= Frank Brown
+2024-06-10 17:30:36 - StopWatch '': 0.024461125 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.024461125   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - createAccount with parameters accountNumber= 4253892 , customerName= John Doe
+2024-06-10 17:30:36 - StopWatch '': 0.001517916 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.001517916   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - deposit with parameters accountNumber= 1263862 , amount= 240.0
+2024-06-10 17:30:36 - StopWatch '': 0.058212292 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.058212292   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - deposit with parameters accountNumber= 1263862 , amount= 529.0
+2024-06-10 17:30:36 - StopWatch '': 0.003685209 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003685209   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - CurrencyConverter: converting 230.0 dollars to euros
+2024-06-10 17:30:36 - StopWatch '': 0.0003885 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.0003885     100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - withdrawEuros with parameters accountNumber= 1263862 , amount= 230.0
+2024-06-10 17:30:36 - StopWatch '': 0.004828416 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.004828416   100%    execution(AccountServiceImpl.withdrawEuros(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - deposit with parameters accountNumber= 4253892 , amount= 12450.0
+2024-06-10 17:30:36 - StopWatch '': 0.183431666 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.183431666   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - CurrencyConverter: converting 200.0 dollars to euros
+2024-06-10 17:30:36 - StopWatch '': 0.000046458 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000046458   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - depositEuros with parameters accountNumber= 4253892 , amount= 200.0
+2024-06-10 17:30:36 - StopWatch '': 0.003875375 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003875375   100%    execution(AccountServiceImpl.depositEuros(..))
+
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - method = findByAccountNumber
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - method = save
+2024-06-10 17:30:36 - transferFunds with parameters fromAccountNumber= 4253892 , toAccountNumber= 1263862 , amount= 100.0 , description= payment of invoice 10232
+2024-06-10 17:30:36 - StopWatch '': 0.008132542 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.008132542   100%    execution(AccountServiceImpl.transferFunds(..))
+
+2024-06-10 17:30:36 - method = findAll
+2024-06-10 17:30:36 - StopWatch '': 0.009451333 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.009451333   100%    execution(AccountServiceImpl.getAllAccounts())
+
+2024-06-10 17:30:36 - Statement for Account: 1263862
+2024-06-10 17:30:36 - Account Holder: Frank Brown
+2024-06-10 17:30:36 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:30:36 -         2024-06-10 17:30:36.32                       deposit              240.00
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.337                       deposit              529.00
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.344                      withdraw             -361.10
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.547      payment of invoice 10232              100.00
+2024-06-10 17:30:36 - --------------------------------------------------------------------------------
+2024-06-10 17:30:36 -                                             Current Balance:              507.90
+2024-06-10 17:30:36 - Statement for Account: 4253892
+2024-06-10 17:30:36 - Account Holder: John Doe
+2024-06-10 17:30:36 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.351                       deposit            12450.00
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.538                       deposit              314.00
+2024-06-10 17:30:36 -        2024-06-10 17:30:36.546      payment of invoice 10232             -100.00
+2024-06-10 17:30:36 - --------------------------------------------------------------------------------
+2024-06-10 17:30:36 -                                             Current Balance:            12664.00
+2024-06-10 17:30:36 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-10 17:32:35 - HikariPool-1 - Shutdown initiated...
+2024-06-10 17:32:35 - HikariPool-1 - Shutdown completed.

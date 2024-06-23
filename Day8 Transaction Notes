@@ -1,0 +1,47 @@
+Day 8 Transaction Notes
+
+global transactions(TX transaction) is very complicated
+If there are two Transaction resource, TX must be used.
+
+Transaction propagation happen => when you call m() method, imagine there is another n() inside m(). If n() errors, m() will also error.
+
+Isolation level => For concurrent situation
+
+Start and Commit transaction in service layer
+
+based on run time exception, roll back occurs
+
+@Transactional => just put in your method
+
+Three levels of isolation
+1. Transaction ReadUncommitted Level => Dirty Read Problem Found => Transaction ReadCommitted Fix (WriteLock)
+Problem => Draw Diagram
+Solve => If Transaction A is in progress and has made changes to the data, we put write lock.
+Transaction B cannot see or read those changes until Transaction A has been fully committed.
+2. Transaction ReadCommitted level Isolation => Non-Repeatable Read Problem Found => Transaction RepeatableRead Fix (ReadLock)
+Problem => Draw Diagram
+Solve => We put read-lock on both transactions A and B.
+Both of those Transactions could not update any data until one transaction is committed.
+3. Transaction RepeatableRead level Isolation => Phantom Read Problem Found => Transaction Serializable Fiz (Dead Lock and it can be low performance)
+
+@Transactional(propagation = Propagation.REQUIRES_NEW,isolation=Isolation.REPEATABLE_READ)
+Spring is not transaction Manager.
+We need hibernate to do transaction Manager.
+Spring provides an abstraction for transaction management.
+
+@Transaction => Around Advice => marks the Transaction as 1
+
+▪ The transaction manager by default only does a rollback for runtime exceptions.
+▪ If you want to rollback for checked exceptions, you have to explicitly specify this.
+
+@Version
+Optimistic concurrency assumes that lost update conflicts generally don’t occur
+▪ Keeps versions# so that it knows when they do
+▪ First commit wins if you use @Version.
+▪ When a version conflict occurs Hibernate throws a StaleObjectStateException
+
+Mongo Database => NoSQL database
+Data can be duplicate
+
+Tomcut => Web container
+

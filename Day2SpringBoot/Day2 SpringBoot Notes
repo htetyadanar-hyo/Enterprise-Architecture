@@ -1,0 +1,56 @@
+What is Spring Boot?
+▪ Framework that makes it easy to configure and run spring applications
+▪ Simple maven configuration
+▪ Default/auto spring configuration
+▪ Container less deployment (Already had container itself)
+
+SpringBoot Running Option
+1) Using Main on (SpringBootApplication.class)
+2) Using configuration.AppProperties + Main on (configuration.AppProperties.class)
+3) Using CommandLineRunner and run()method
+
+app.Application Properties
+~ application.properties => smtpserver=smtp.mydomain.com
+1) @Value( " ${smtpserver}") => Inject the value form the properties file
+2) @PropertySource("classpath:application.properties")
+# If you run your app by using CommandLineRunner, no need to configure @PropertySource
+# If you run others two options, you need to configure @PropertySource.
+3) logging.level.root = ERROR
+4) logging.level.org.springframework = ERROR
+
+
+Component Scanning
+1) package demo => Spring will automatically scan all classes in the package demo and all sub package of demo
+2) @ComponentScan(basePackages = {"Service"}) => Specify packages
+
+
+To solve which class to inject if there are two DIs
+1) Use Qualifier => @Qualifier(value="greetingOne")
+2) Use Profiles => @Profile("One")
+
+Layered Architecture
+Presentation(Web) Layer => @Controller
+    ~ HTTP controller
+    (Client)
+Service Layer => @Service => (Faced) Link with Web to be able to follow encapsulation
+    ~ Connects plumbing(technical) classes together
+    (AccountService)
+Domain Layer => Cause of Singleton (Plain Object)
+    ~ Domain classes (Contains no technical code -mean business logics)
+    (Account / AccountEntry)
+Integration Layer => @Component
+    ~ Logging
+    ~ Sending an email/Sending a message
+    (JMS Sender)
+    ~ Calling another application
+Data Access Layer => @Repository
+    ~ Database
+    ~ Other persistency
+    (Account Repository)
+
+ DI Layered Architecture
+ Web ---> Service
+ Service ---> Repository (Data Access)
+ Service ---> Integration (SendMail)
+
+

@@ -1,0 +1,6 @@
+Document: Lazy Loading and @Transactional in Spring
+
+By adding @Transactional on the service layer, it makes that Hibernate session is available during the execution of service methods, allowing lazy loading to function correctly.
+That's why we don't need eager loading anymore as entities are loaded on demand within the transactional context.
+
+However, without @Transactional, Hibernate session is closed before the lazy-loaded entities are accessed. That's why at that time eager loading is needed.

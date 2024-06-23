@@ -1,0 +1,72 @@
+What is AOP?
+AOP stands for Aspect-Oriented Programming.
+It's a programming that focuses on improving code modularity by separating cross-cutting concerns.
+
+Crosscutting concern
+A cross-cutting concern is a concern or aspect of a program that affects multiple modules or layers in a system.
+~ We have to call checkSecurity() for all methods of all service classes
+~ We have to call Logger.log() for all methods of all repo classes
+
+Separation of Concern
+•Separate business logic from (technical) plumbing code
+•Avoid code tangling
+
+AOP concepts
+▪ Joinpoint
+    ~ A specific point in the execution of a program, such as method or code, where an aspect can be applied
+▪ Pointcut
+    ~ A collection of 1 or more joinpoints
+▪ Aspect
+    ~ A component in AOP that contains code for cross-cutting concerns like logging or transaction management
+    ~ Call the method of Advice at which locations(mean before,after,around) in the code(pointcut)
+▪ Advice
+    ~ The implementation of crosscutting concerns, such as logging or security, which are applied at specific joinpoints in the program's execution flow, typically in AOP
+    ~ Advice Types
+        #Before
+         ~ First call the advice method and then the business logic method
+        #After returning
+         ~ First call the business logic method and when this business logic method returns normally without an exception, then call the advice method
+         *** afterReturningAdvice method will be called only if processOrder method completes without throwing any exceptions.
+        #After throwing
+         ~ First call the business logic method and when this business logic method throws an exception, then call the advice method
+        #After (finally)
+         ~ First call the business logic method and then call the advice method (independent of how the business logic method returned: normally or with exception)
+        #Around
+         ~ First call the advice method. The advice method calls the business logic method, and when the business logic method returns, we get back to the advice method
+▪ Weaving
+    # Weaving is the process of combining aspects with the main program code.
+    ~ Proxy-based weaving (At run time)
+    ~ Load time weaving
+
+To detect, register, and manage the class as a bean within the application context
+~ @Component, @Service, @Repository, @Controller) is crucial for Spring
+If you miss any of them,
+~ No Bean Registration
+~ No Proxy Creation
+~ No Advice invocation
+
+Pointcut Execution Language
+@Before("execution(public * *.*.*(..))")
+public => #Visibility
+            Possibilities:
+            •private
+            •public
+            •Protected
+           ~ Optional
+           ~ Cannot be *
+* => #Return type:
+     •The return type of the corresponding method(s)
+     •Not optional
+     •Can be *
+#package.class.method(args):
+    •Name of the package can also be *
+    •Name of the class can also be *
+    •Name of the method can also be *
+    •Arguments can be ..
+    •Not optional
+    •Can also be *.*(..)
+    •Can also be *(..)
+
+Disadvantage of a proxy
+If a business method calls another business method of the same object,
+then this call is not going via the proxy, so AOP advices are not called.

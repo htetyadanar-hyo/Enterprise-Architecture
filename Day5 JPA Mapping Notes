@@ -1,0 +1,306 @@
+Day5 JPA Mapping Notes
+
+#SQL Database & JPA => Case sensitive
+
+#Annotation Types
+@Column => to specify more details
+@Lob => Large Objects (e.g, if you want to use image - datatype-byte)
+@Transient => just a memory (leave it alone)
+
+Specify Different Mapping
+@Column(name="FULLNAME", length=255, nullable=false)
+***
+@Column(name="birthday")
+private LocalDate birthday;
+
+#Property or Field Access
+JPA can access objects in two ways
+▪ property access gets and sets object values through getter /setter methods
+▪ field access gets and sets object values directly from / to the fields
+~ Others field will be the same as id field.
+Placing @Id on a field specifies field access for the entire object
+##Field Access
+@Entity
+public class Person{
+    @Id
+    @GeneratedValue
+    private long id;
+    private String name; => Name is also Field Access because of id is field access
+}
+##Property Access
+Placing @Id on a getter specifies property access for the entire object
+@Entity
+public class Person{
+    private long id;
+    private String name;
+    @Id
+    @GeneratedValue
+    public long getId() { return id;}
+    private void setId(long id) { this.id = id; }
+    public String getName() { return name; } => Name is also Property Access because of id is property access
+    public void setName(String name) { this.name = name; }
+}
+
+#JPA lifecycle of an entity
+~Transient => Entity manager doesn't know the object that stage
+~In persistence context => if you change entity(object), the database will also change automatically. (Tracks changes)
+~In Detached stage => If entitymanager.close(), changes made to the entity are not tracked.
+~In Detached merge => To persist(save) changes made to a detached entity, it must be merged back into an active session.
+Transient entity
+~Has no database identity
+Persistence Context
+~Manages the entities
+~Track changes
+~Managed entities will be save in the database
+~A managed entity is managed by the persistence context and has a database identity
+[Mean that if the entity is changed, the database entity will also change].
+Detached Entity
+~Has a database identity, but is not managed by the current persistence context.
+[Mean that if the state of a detached entity is changed, database identity will not change)
+Removed Entity
+~With a removed entity is the corresponding data removed from the database
+[Not remove the
+
+#O/R Mapping
+O/R Mapping translates references into foreign keys
+foreign key is always on the many side.
+
+All the entities are proxy.
+
+#Directional
+~ Uni-directional
+public class Person{
+    private List<Car> cars = new ArrayList<>();
+}
+public class Car{
+    ....
+}
+~ Bi-directional
+public class Person{
+    private List<Car> cars = new ArrayList<>();
+}
+public class Car{
+   private Person person;
+}
+
+#ManyToOne Association //Default mapping uses joincolumn
+(Car) * -> 1 (Customer)
+~ Uni-directional
+@Entity
+public class Car{
+    @ManyToOne
+    @JoinColumn(name="c_id") (If add JoinColumn => Use C_ID as foreign key)
+    private Customer customer; (Use CUSTOMER_ID as foreign key)
+}
+public class Customer{
+    ....
+}
+(Car) * -> 0-1 (Customer)
+public class Car{
+    @ManyToOne
+    @JoinTable(name="car_cust")
+    private Customer customer;
+}
+(Car) * -> 0-1 (Customer)
+public class Car{
+    @ManyToOne
+    @JoinTable(name="car_cust",
+     joinColumns = { @JoinColumn(name="car_id")},
+     inverseColumns = { @JoinColumn(name="cust_id")} )
+     private Customer customer;
+}
+~Bi-directional **Use mappedBy on the many side
+(Car) * <-> 1(Customer)
+public class Car{
+    @ManyToOne
+    @JoinColumn(name="owner_id")
+    private Customer owner;
+}
+public class Customer{
+    @OneToMany(mappedBy="owner")
+    private List<Car> cars = new ArrayList<>();
+}
+
+
+#OneToMany Association //Default mapping use JoinTable
+(Customer) 1 -> *(Car)
+~Uni-directional
+public class Customer{
+    @OneToMany
+    private Collection<Car> cars = new ArrayList<>();
+}
+public class Car{
+    ....
+}
+public class Customer{
+    @OneToMany
+    @JoinColumn(name="c_id")
+    private Collection<Car> cars = new ArrayList<>();
+}
+public class Customer{
+    @OneToMany
+    @JoinTable(name = "cust_car",
+        joinColumns = { @JoinColumn(name="cust_id")},
+        inverseJoinColumns = { @JoinColumn(name="car_id")})
+    private Collection<Car> cars = new ArrayList<Car>();
+}
+~Bi-directional **Use mappedBy on the many side
+(Customer) 1 <-> * (Car)
+public class Customer{
+    @OneToMany(mappedBy = "owner")
+    private List<Car> cars;
+}
+public class Car{
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Customer owner;
+}
+
+#OneToOne Association
+~ Uni-directional
+~ JPA does not support a real OneToOne
+~ That's why, mapping result is the same as ManyToOne
+(Customer) 1 -> 1 (Address)
+public class Customer{
+    @OneToOne
+    private Address address;
+}
+public class Address{
+}
+*If you use @PrimaryKeyJoinColumn, id is had to added manually. (Cannot use @GeneratedValue)
+** Don't use it if possible.
+public class Customer{
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private Address address;
+}
+
+
+#ManyToMany Association //Default mapping use joinTable
+~Bi-directional
+(Customer) 0-* <-> 1-* (SalePerson)
+public class Customer{
+    @ManyToMany
+    private Collection<SalePerson> salesPeople = new ArrayList<>();
+}
+public class SalePerson{
+    @ManyToMany(mappedBy="salesPeople")
+    private List<Customer> customers = new ArrayList<Customer>();
+}
+#many-to-many relationship have to be jointable
+
+#Specifying Cascades //Default NO cascading
+public class Person{
+    @OneToMany(cascade=CascadeType.PERSIST)
+    //@OneToMany(cascade={CascadeType.PERSIST,CascadeType.MERGE})
+    private List<Car> cars = new ArrayList<Car>();
+}
+
+#Cascade Types
+ALL => cascade on all operations
+PERSIST => Cascade on persist operations
+MERGE => Cascade on merge operations
+REMOVE => Cascade on remove operations
+REFRESH => Cascade on refresh operations
+By using cascade, if you delete objects, these objects will delete.
+
+Check Page43 To learn summary
+
+#JPA Default Fetching
+@OneToOne => eager
+@ManyToOne => eager
+@OneToMany => lazy
+@ManyToMany => lazy
+
+Changing the default fetching
+public class Course{
+    @OneToMany(fetch = fetchType.EAGER)
+}
+
+#Java Collections
+▪ Not ordered List (= Bag)
+▪ Set
+▪ List
+▪ Map
+
+Mapping an not ordered list
+(Person) 1 <-> * (Tool)
+public class Person{
+    @OneToMany(mappedBy="owner",cascade=CascadeType.PERSIST)
+    private Collection<Tool> tools = new ArrayList<>();
+} //Hibernate will map a Collection as a Bag
+public class Tool{
+    @ManyToOne
+    private Person owner;
+}
+public class Person{
+    @OneToMany(mappedBy="owner",cascade=CascadeType.PERSIST)
+    private List<Tool> tools = new ArrayList<>();
+} //Hibernate will map a List as a Bag
+public class Tool{
+    @ManyToOne
+    private Person owner;
+}
+
+Set (E.g. toolbox)
+=> not inherent (unordered collection)
+=> no duplicates
+public class Person{
+    @OneToMany(mappedBy="owner",cascade=CascadeType.PERSIST)
+    private Set<Tool> tools = new HashSet<>();
+}
+
+Lists (Making to be orderList) (E.g Shopping list)
+=> Inherent (ordered collection)
+=> contains duplicates
+public class Person{
+    @OneToMany(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="buyer_id")
+    @OrderColumn(name="sequence")
+    private List<Item> shopList = new ArrayList<>();
+}
+public class Person{
+    @OneToMany(cascade=CascadeType.PERSIST)
+    @OrderBy(clause="type ASC")
+    private List<Item> shopList = new ArrayList<>();
+}
+
+Map (E.g, Pet and pet owner)
+=> unique key
+=> No inherent (unordered list)
+public class Person{
+    @OneToMany(mappedBy="owner", cascade=CascadeType.PERSIST)
+    @MapKey(name = "name")
+    private Map<String, Pet> pets = new HashMap<String, Pet>();
+}
+
+
+
+****
+The issue in list:
+Map is not order and list is order;
+private List<Tool> tools;
+If you use list, you have to have
+    1) @OrderColumn
+    2) type
+
+
+****
+Except for primitive types, hibernate give proxy.
+
+****
+List has order
+Collection has no order
+
+Explicit Updates: Require manual intervention to notify Hibernate of changes.
+Implicit Updates: Hibernate automatically detects and applies changes to persistent entities during a transaction.
+Explicit updates provide more control, whereas implicit updates offer convenience and less boilerplate code.
+
+algoMonser.com
+
+@Data => to change toString()
+General Knowledge
+The type of the variables is implicitly understood based on the assigned values.
+cache is a high-speed data storage layer that stores a subset of data
+
+

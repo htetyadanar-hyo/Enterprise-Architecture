@@ -1,0 +1,22 @@
+#myapp.applicationName=Application
+#myapp.version=1.0
+#myapp.serverURL=http://localhost:8082
+#myapp.serverName=MyServer
+#myapp.userFirstName=Jane
+#myapp.userLastName=Edward
+#myapp.username=admin
+#myapp.password=admin
+#myapp.countries=USA, UK
+
+myapp:
+  applicationName: Application
+  version: 1.0
+  serverURL: http://localhost:8082
+  serverName: MyServer
+  userFirstName: Jane
+  userLastName: Edward
+  username: admin123
+  password: admin124
+  countries:
+    - USA
+    - UK

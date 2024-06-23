@@ -1,0 +1,121 @@
+Day2 SpringCore Notes
+
+Types of DI
+1. Property Injection (Setter Injection)
+2. Constructor Injection
+3. Autowiring
+
+
+Constructor with multiple parameters
+~ Spring looks at the order of declaration to decide what to inject for the first and the second parameter
+<bean id="accountService" class="DI.Constructor.AccountServiceImpl">
+        <constructor-arg ref="paymentService"/>
+        <constructor-arg ref="accountRepository"/>
+</bean>
+~ Spring looks at the index to decide what to inject for the first and the second parameter
+<bean id="accountService" class="DI.Constructor.AccountServiceImpl">
+        <constructor-arg index="0" ref="paymentService"/>
+        <constructor-arg index="1" ref="accountRepository"/>
+</bean>
+
+*****
+Order of Execution
+1) Instantiate an instance of ApplicationContext
+2) Start reading and processing config (XML, @, Java, Hybrid)
+3) Detect beans and start instantiating "eager" beans
+    3a) If DI is constructor, do DI
+4) Property/Field Injection
+5) Call the init method if exists
+6) Call run()
+7) App runs
+8) App shutdown => context close
+9) Call destroy methods (@PreDestroy)
+
+Autowiring
+~ ByName
+<bean id="customerService" class="DI.Autowiring.CustomerService" autowire="byName"/>
+~ ByType
+<bean id="customerService" class="DI.Autowiring.CustomerService" autowire="byType"/>
+~ ByConstructor
+<bean id="customerService" class="mypackage.CustomerService" autowire="constructor"/>
+~ @Autowired => Default ByType
+@Autowired
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+
+Field Injection
+@Autowired
+    private PaymentService paymentService;
+
+
+Automatic conversion from String to long
+<bean id="customerService" class="mypackage.CustomerServiceImpl">
+    <property name="defaultCountry" value="USA"/>
+    <property name="numberOfCustomers" value="56982"/>
+</bean>
+
+Annotations
+Before Class
+@Component
+@Service => For Service Classes (e.g, @Service("emailService"))
+@Repository => For Data Access Objects
+@Controller => For Controller classes in a web application
+
+Before Class
+@Scope("prototype") => To be able to change from singleton to prototype
+
+Inside the class
+@Value("smtp.mailserver.com") => Set the value of an attribute
+
+Java configuration
+
+@Lazy(true)
+@Scope(value = "prototype")
+
+3 ways of Spring configuration
+▪ XML configuration
+    <bean id="accountService" class="DI.Property.AccountService">
+            <property name="accountRepository" ref="accountRepository"/>
+         </bean>
+    <bean id="accountRepository" class="DI.Property.AccountRepositoryImpl"/>
+▪ Classpath scanning and Autowiring
+    <context:component-scan base-package="scanning"/>
+    <context:annotation-config />
+▪ Java configuration
+    @configuration
+    public class configuration.AppProperties {
+        @Bean
+        public CustomerService customerService(){
+        CustomerService customerService = new CustomerServiceImpl(); customerService.setEmailService(emailService());
+            return customerService;
+        }
+        @Bean
+        public EmailService emailService(){
+            return new EmailServiceImpl();
+        }
+    }
+/*****/
+Simplest configuration!
+▪ Java config + classpath scanning + autowiring
+    @configuration
+    @ComponentScan
+    public class configuration.AppProperties {
+    }
+    @Service
+    public class CustomerServiceImpl implements CustomerService {
+    @Autowired
+    private EmailService emailService;
+    public void addCustomer() {
+        emailService.sendEmail();
+    }
+}
+
+Put lombok dependency to use logging
+Default log level is info.
+logging.level...... = .....;
+
+
+
+

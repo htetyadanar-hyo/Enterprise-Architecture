@@ -1,0 +1,309 @@
+Day6 JPA Mapping Notes
+
+Polymorphism is the ability of a subtype to appear and behave like its supertype.
+Polymorphic Query:
+Animal dog = new Dog();
+Animal cat = new Cat();
+
+Non-polymorphic Query:
+Dog dog = new Dog();
+Cat cat = new Cat();
+
+##Inheritance Mapping
+1. Single Table per Hierarchy
+    ~ De-normalized schema
+    ~ Fast Polymorphic queries
+2. Join Tables
+    ~ Normalized & similar to classes
+    ~ Slower Queries
+3. Table per Concrete Class
+    ~ Use Union instead of join
+    ~ No Null values
+    ~ No joins needed (Very efficient non-polymorphic queries)
+    ~ Cannot use ID
+    ~ Requires a Union for polymorphic queries
+    ~ union is much faster than join
+
+#Single Table
++ Simple, Easy to implement
++ Good performance on all queries, polymorphic and non polymorphic
+– Nullable columns / de-normalized schema
+– Table may have to contain lots of columns
+– A change in any class results in a change of this table
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="account_type")
+public abstract class Account{
+    @Id
+    @GeneratedValue
+    private long number;
+}
+@Entity
+@DiscriminatorValue("savings")
+public class SavingsAccount extends Account{
+    private double APY;
+}
+@Entity
+@DiscriminatorValue("checking")
+public class CheckingAccount extends Account{
+    private double overDraftLimit;
+}
+
+#Joined Tables
++ Normalized Schema
++ Database view is similar to domain view
+– Inserting or updating an entity results in multiple insert or update statements
+– Necessary joins can give bad query performance
+@Entity
+@Inheritance(strategy=InheritanceType.JOINED)
+public abstract class Account{
+    @Id
+    @GeneratedValue
+    private long number;
+}
+@Entity
+public class SavingsAccount extends Account{
+    private double APY;
+}
+@Entity
+public class CheckingAccount extends Account{
+    private double overDraftLimit;
+}
+
+#Table per Concrete Class
++ Simple table structure + No Null values
++ Very efficient non-polymorphic queries + No joins needed
+– Can not use Identity column ID generation
+– JPA does not require its implementation (optional) – Requires a UNION for polymorphic queries
+TABLE => multiple tables shared primary keys
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Account{
+    @Id
+    @GeneratedValue(strategy=GenerationType.TABLE) => Cannot Identity
+}
+@Entity
+public class SavingsAccount extends Account{
+    private Double APY: (Must be wrapperType/not primitive)
+}
+@Entity
+public class CheckingAccount extends Account{
+    private Double overDraftLimit;
+}
+
+Complex Mappings
+▪ Secondary tables – allow a class to be mapped to multiple tables
+▪ Embedded classes – allow multiple classes to be mapped to a single table
+▪ Composite keys – can be made using embedded classes
+
+Secondary Table
+(One Class to Multiple Tables)
+@Entity
+@SecondaryTable(name="warehouse")
+//@SecondaryTables(
+    @SecondaryTable(name="warehouse", pkJoinColumns = {
+        @PrimaryKeyJoinColumn(name="product_id",referenceColumnName="number")
+   })
+)
+public class Product{
+    @Id
+    @GeneratedValue
+    private int number;
+    private String name;
+    @Column(table="warehouse")
+    private int available;
+    @Column(table="warehouse")
+    private int stock;
+}
+
+Embedded Classes (Use in OneToOne)
+(Multiple Classes to one Table)
+@Entity
+public class Person{
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @Embedded
+    private Address address;
+}
+@Embeddable
+public class Address{
+    private String street;
+    private String city;
+}
+//Multiple Embedded Addresses
+@Entity
+public class Person{
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name="street", column=@Column(name="ship_street"),
+        @AttributeOverride(name="city", column=@Column(name="ship_city")
+    })
+    private Address shipping;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="street", column=@Column(name="bill_street"),
+            @AttributeOverride(name="city", column=@Column(name="bill_city")
+    })
+    private Address billing;
+}
+
+Composite Keys
+(Multi-Column Primary Keys) (Natural Keys)
+In the example name = firstname + lastname;
+@Embeddable
+public class Name implements Serializable{
+    private String firstname;
+    private String lastname;
+
+    ....
+    public boolean equals(Object obj){
+        if( this == obj) return true;
+        if( (obj == null) || obj.getClass() != this.getClass()) return false;
+        Name n = (Name) obj;
+        if (firstname == n.firstname || (firstname != null && firstname.equals(n.firstname))
+        && lastname == n.lastname || (lastname != null && lastname.equals(n.lastname))) {
+        return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public int hashCode(){
+        int hash = 1234;
+        if( firstname != null){
+            hash = hash + firstname.hashCode();
+        }
+        if( lastname != null){
+            hash = hash + lastname.hashCode();
+        }
+        return hash;
+    }
+}
+@Entity
+public class Employee{
+    @EmbeddedId
+    private Name name;
+    private Date startDate;
+    @OneToMany(mappedBy = "owner")
+    private Collection<Project> projects = new ArrayList<Project>();
+}
+@Entity
+public class Project{
+    @Id
+    @GeneratedValue
+    private int id;
+    @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "Emp_firstname", referencedColumnName="firstname"),
+        @JoinColumn(name = "Emp_lastname", referencedColumnName = "lastname")
+    })
+    private Employee owner;
+}
+
+Data Transfer Objects (DTO)
+A DTO has no business logic and is used to transfer data between objects.
+Using DTO’s gives loose coupling through information hiding.
+@Entity
+public class Contact{
+    @Id
+    private long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+}
+public interface ContactRepository extends JpaRepository<Contact, Long> {
+    public Contact findByFirstName(String firstName);
+}
+public class ContactDTO{
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+}
+public class ContactAdapter{
+    public static Contact getContactFromContactDTO(ContactDTO contactDTO){
+        return new Contact(contactDTO.getFirstName(),
+            contactDTO.getLastName(),
+            contactDTO.getEmail(),
+            contactDTO.getPhone());
+    }
+    public static ContactDTO getContactDTOFromContact(Contact contact){
+        return new ContactDTO(contact.getFirstName(),
+            contact.getLastName(),
+            contact.getEmail(),
+            contact.getPhone());
+    }
+    public static List<ContactDTO> getContactDTOsFromContacts(List<Contact> contacts){
+        List<ContactDTO> contactDTOs = new ArrayList<>();
+        for(Contact contact: contacts){
+            contactDTOs.add(getContactDTOFromContact(contact));
+        }
+        return contactDTOs;
+    }
+}
+@Service
+public class ContactService {
+    @Autowired
+    ContactRepository contactRepository;
+    @Autowired
+    EmailSender emailSender;
+    public void add(ContactDTO contactDTO){
+        Contact contact = ContactAdapter.getContactFromContactDTO(contactDTO);
+        contactRepository.save(contact); emailSender.sendEmail(contact.getEmail(), "Welcome");
+    }
+    public void update(ContactDTO contactDTO){
+        Contact contact = ContactAdapter.getContactFromContactDTO(contactDTO);
+        contactRepository.save(contact);
+    }
+    public ContactDTO findByFirstName(String firstName){
+        Contact contact = contactRepository.findByFirstName(firstName);
+        return ContactAdapter.getContactDTOFromContact(contact);
+    }
+    public void delete(String firstName){
+        Contact contact = contactRepository.findByFirstName(firstName);
+        emailSender.sendEmail(contact.getEmail(), "Good By");
+        contactRepository.delete(contact);
+    }
+    public Collection<ContactDTO> findAll(){
+        return ContactAdapter.getContactDTOsFromContacts(contactRepository.findAll());
+    }
+}
+@SpringBootApplication
+public class SpringBootDemoApplication implements CommandLineRunner {
+    @Autowired
+    private ContactService contactService;
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootDemoApplication.class, args);
+    }
+    @Override
+    public void run(String... args) throws Exception {
+        contactService.add(new ContactDTO("Frank","Brown","fbrown@gmail.com","4723459800"));
+        System.out.println(contactService.findByFirstName("Frank"));
+    }
+}
+
+
+
+If you use ManyToOne relationship and one type is not entity
+*** (Enum is not Entity)
+By using @Enumerated(String) is used to map Enum
+public enum SalaryRate{
+    JUNIOR,
+    SENIOR
+}
+@Enumerated(String)
+public SalaryRate getPayScale(){...}
+
+If you use OneToMany relationship and one type is not entity
+*** (String is not Entity)
+@ElementCollection to map String
+private Set<String> nickNames = new HashSet<>();

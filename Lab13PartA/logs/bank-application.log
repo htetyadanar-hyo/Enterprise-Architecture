@@ -1,0 +1,356 @@
+2024-06-10 17:09:55 - Starting app.Application using Java 21.0.3 with PID 45844 (/Users/htetyadanaroo/Documents/EA/Lab13PartA/Lab13PartA-Bank-rest-server/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartA)
+2024-06-10 17:09:55 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:09:55 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:09:57 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2024-06-10 17:14:42 - Starting app.Application using Java 21.0.3 with PID 45906 (/Users/htetyadanaroo/Documents/EA/Lab13PartA/Lab13PartA-Bank-rest-server/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartA)
+2024-06-10 17:14:42 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:14:42 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:14:44 - Started app.Application in 2.123 seconds (process running for 2.597)
+2024-06-10 17:14:44 - StopWatch '': 0.024250708 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.024250708   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.001230667 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.001230667   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.057687166 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.057687166   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.004082125 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.004082125   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:14:44 - CurrencyConverter: converting 230.0 dollars to euros
+2024-06-10 17:14:44 - StopWatch '': 0.000820708 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000820708   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.004003167 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.004003167   100%    execution(AccountServiceImpl.withdrawEuros(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.173592791 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.173592791   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:14:44 - CurrencyConverter: converting 200.0 dollars to euros
+2024-06-10 17:14:44 - StopWatch '': 0.000101917 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000101917   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.003748667 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003748667   100%    execution(AccountServiceImpl.depositEuros(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.014307667 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.014307667   100%    execution(AccountServiceImpl.transferFunds(..))
+
+2024-06-10 17:14:44 - StopWatch '': 0.007707208 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.007707208   100%    execution(AccountServiceImpl.getAllAccounts())
+
+2024-06-10 17:14:44 - Statement for Account: 1263862
+2024-06-10 17:14:44 - Account Holder: Frank Brown
+2024-06-10 17:14:44 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.669                       deposit              240.00
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.687                       deposit              529.00
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.694                      withdraw             -361.10
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.888      payment of invoice 10232              100.00
+2024-06-10 17:14:44 - --------------------------------------------------------------------------------
+2024-06-10 17:14:44 -                                             Current Balance:              507.90
+2024-06-10 17:14:44 - Statement for Account: 4253892
+2024-06-10 17:14:44 - Account Holder: John Doe
+2024-06-10 17:14:44 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.699                       deposit            12450.00
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.876                       deposit              314.00
+2024-06-10 17:14:44 -        2024-06-10 17:14:44.883      payment of invoice 10232             -100.00
+2024-06-10 17:14:44 - --------------------------------------------------------------------------------
+2024-06-10 17:14:44 -                                             Current Balance:            12664.00
+2024-06-10 17:15:29 - Starting app.Application using Java 21.0.3 with PID 45909 (/Users/htetyadanaroo/Documents/EA/Lab13PartA/Lab13PartA-rest-client/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartA)
+2024-06-10 17:15:29 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:15:29 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:15:29 - Started app.Application in 0.42 seconds (process running for 0.668)
+2024-06-10 17:15:29 - app.Application run failed
+java.lang.IllegalStateException: Failed to execute CommandLineRunner
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:770)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331)
+	at client.app.Application.main(app.Application.java:23)
+Caused by: org.springframework.web.client.HttpClientErrorException$MethodNotAllowed: 405 Method Not Allowed: "{<EOL>"servlet":"org.eclipse.jetty.servlet.ServletHandler$Default404Servlet-4738a206",<EOL>"message":"HTTP method POST is not supported by this URL",<EOL>"url":"/accounts",<EOL>"status":"405"<EOL>}"
+	at org.springframework.web.client.HttpClientErrorException.create(HttpClientErrorException.java:115)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:183)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:137)
+	at org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:932)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:881)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:781)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:498)
+	at client.app.Application.run(app.Application.java:30)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:786)
+	... 14 common frames omitted
+2024-06-10 17:18:57 - Starting app.Application using Java 21.0.3 with PID 45942 (/Users/htetyadanaroo/Documents/EA/Lab13PartA/Lab13PartA-Bank-rest-server/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartA)
+2024-06-10 17:18:57 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:18:57 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:18:59 - Started app.Application in 2.0 seconds (process running for 2.429)
+2024-06-10 17:18:59 - StopWatch '': 0.020997333 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.020997333   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.001260958 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.001260958   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.052525458 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.052525458   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.002993625 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.002993625   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:18:59 - CurrencyConverter: converting 230.0 dollars to euros
+2024-06-10 17:18:59 - StopWatch '': 0.000686459 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000686459   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.00429025 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.00429025    100%    execution(AccountServiceImpl.withdrawEuros(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.184530041 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.184530041   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:18:59 - CurrencyConverter: converting 200.0 dollars to euros
+2024-06-10 17:18:59 - StopWatch '': 0.000103334 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000103334   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.004050542 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.004050542   100%    execution(AccountServiceImpl.depositEuros(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.014075916 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.014075916   100%    execution(AccountServiceImpl.transferFunds(..))
+
+2024-06-10 17:18:59 - StopWatch '': 0.008511083 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.008511083   100%    execution(AccountServiceImpl.getAllAccounts())
+
+2024-06-10 17:18:59 - Statement for Account: 1263862
+2024-06-10 17:18:59 - Account Holder: Frank Brown
+2024-06-10 17:18:59 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.653                       deposit              240.00
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.663                       deposit              529.00
+2024-06-10 17:18:59 -         2024-06-10 17:18:59.67                      withdraw             -361.10
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.874      payment of invoice 10232              100.00
+2024-06-10 17:18:59 - --------------------------------------------------------------------------------
+2024-06-10 17:18:59 -                                             Current Balance:              507.90
+2024-06-10 17:18:59 - Statement for Account: 4253892
+2024-06-10 17:18:59 - Account Holder: John Doe
+2024-06-10 17:18:59 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.676                       deposit            12450.00
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.864                       deposit              314.00
+2024-06-10 17:18:59 -        2024-06-10 17:18:59.872      payment of invoice 10232             -100.00
+2024-06-10 17:18:59 - --------------------------------------------------------------------------------
+2024-06-10 17:18:59 -                                             Current Balance:            12664.00
+2024-06-10 17:21:20 - Starting app.Application using Java 21.0.3 with PID 45963 (/Users/htetyadanaroo/Documents/EA/Lab13PartA/Lab13PartA-Bank-rest-server/target/classes started by htetyadanaroo in /Users/htetyadanaroo/Documents/EA/Lab13PartA)
+2024-06-10 17:21:20 - Running with Spring Boot v3.2.0, Spring v6.1.1
+2024-06-10 17:21:20 - No active profile set, falling back to 1 default profile: "default"
+2024-06-10 17:21:21 - Starting service [Tomcat]
+2024-06-10 17:21:21 - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2024-06-10 17:21:21 - Initializing Spring embedded WebApplicationContext
+2024-06-10 17:21:21 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-10 17:21:21 - HHH000412: Hibernate ORM core version 6.3.1.Final
+2024-06-10 17:21:21 - HHH000026: Second-level cache disabled
+2024-06-10 17:21:21 - HikariPool-1 - Starting...
+2024-06-10 17:21:21 - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@145a821d
+2024-06-10 17:21:21 - HikariPool-1 - Start completed.
+2024-06-10 17:21:21 - HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-06-10 17:21:21 - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2024-06-10 17:21:21 - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-06-10 17:21:22 - Started app.Application in 1.927 seconds (process running for 2.422)
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - createAccount with parameters accountNumber= 1263862 , customerName= Frank Brown
+2024-06-10 17:21:22 - StopWatch '': 0.022177833 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.022177833   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - createAccount with parameters accountNumber= 4253892 , customerName= John Doe
+2024-06-10 17:21:22 - StopWatch '': 0.001425292 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.001425292   100%    execution(AccountServiceImpl.createAccount(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - deposit with parameters accountNumber= 1263862 , amount= 240.0
+2024-06-10 17:21:22 - StopWatch '': 0.052074583 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.052074583   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - deposit with parameters accountNumber= 1263862 , amount= 529.0
+2024-06-10 17:21:22 - StopWatch '': 0.003292709 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003292709   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - CurrencyConverter: converting 230.0 dollars to euros
+2024-06-10 17:21:22 - StopWatch '': 0.00032375 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.00032375    100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - withdrawEuros with parameters accountNumber= 1263862 , amount= 230.0
+2024-06-10 17:21:22 - StopWatch '': 0.003588833 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003588833   100%    execution(AccountServiceImpl.withdrawEuros(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - deposit with parameters accountNumber= 4253892 , amount= 12450.0
+2024-06-10 17:21:22 - StopWatch '': 0.171960417 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.171960417   100%    execution(AccountServiceImpl.deposit(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - CurrencyConverter: converting 200.0 dollars to euros
+2024-06-10 17:21:22 - StopWatch '': 0.000037666 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.000037666   100%    execution(CurrencyConverterImpl.euroToDollars(..))
+
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - depositEuros with parameters accountNumber= 4253892 , amount= 200.0
+2024-06-10 17:21:22 - StopWatch '': 0.003813542 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.003813542   100%    execution(AccountServiceImpl.depositEuros(..))
+
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - method = findByAccountNumber
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - method = save
+2024-06-10 17:21:22 - transferFunds with parameters fromAccountNumber= 4253892 , toAccountNumber= 1263862 , amount= 100.0 , description= payment of invoice 10232
+2024-06-10 17:21:22 - StopWatch '': 0.02485725 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.02485725    100%    execution(AccountServiceImpl.transferFunds(..))
+
+2024-06-10 17:21:22 - method = findAll
+2024-06-10 17:21:22 - StopWatch '': 0.006681375 seconds
+----------------------------------------
+Seconds       %       Task name
+----------------------------------------
+0.006681375   100%    execution(AccountServiceImpl.getAllAccounts())
+
+2024-06-10 17:21:22 - Statement for Account: 1263862
+2024-06-10 17:21:22 - Account Holder: Frank Brown
+2024-06-10 17:21:22 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.512                       deposit              240.00
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.523                       deposit              529.00
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.529                      withdraw             -361.10
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.718      payment of invoice 10232              100.00
+2024-06-10 17:21:22 - --------------------------------------------------------------------------------
+2024-06-10 17:21:22 -                                             Current Balance:              507.90
+2024-06-10 17:21:22 - Statement for Account: 4253892
+2024-06-10 17:21:22 - Account Holder: John Doe
+2024-06-10 17:21:22 - -Date--------------------------Description-------------------Amount-------------
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.535                       deposit            12450.00
+2024-06-10 17:21:22 -         2024-06-10 17:21:22.71                       deposit              314.00
+2024-06-10 17:21:22 -        2024-06-10 17:21:22.717      payment of invoice 10232             -100.00
+2024-06-10 17:21:22 - --------------------------------------------------------------------------------
+2024-06-10 17:21:22 -                                             Current Balance:            12664.00
+2024-06-10 17:22:57 - HikariPool-1 - Shutdown initiated...
+2024-06-10 17:22:57 - HikariPool-1 - Shutdown completed.
